@@ -10,13 +10,13 @@ namespace JRPG.EntityComponent
     public class EntityManager : DrawableGameComponent
     {
         private readonly List<Entity> _entities;
-        private readonly Dictionary<string, Entity> _registeredEntities;
+        private readonly Dictionary<string, List<Entity>> _registeredEntities;
 
         public EntityManager(Game game) : base(game)
         {
             game.Components.Add(this);
             _entities = new List<Entity>();
-            _registeredEntities = new Dictionary<string, Entity>();
+            _registeredEntities = new Dictionary<string, List<Entity>>();
         }
 
         public Entity CreateEntity()
@@ -29,47 +29,73 @@ namespace JRPG.EntityComponent
         public void AddEntity(Entity entity)
         {
             _entities.Add(entity);
+            _entities.Sort((a, b) => a.Priority.CompareTo(b.Priority));
         }
 
         public void RemoveEntity(Entity entity)
         {
             _entities.Remove(entity);
-            string key = (from kv in _registeredEntities
-                         where kv.Value.Equals(entity)
-                         select kv.Key).FirstOrDefault();
-            if (key != null)
+            List<string> keys = _registeredEntities.Where(l => l.Value.Contains(entity)).Select(x => x.Key).ToList();
+            if (keys != null)
             {
-                Unregister(key);
+                keys.ForEach(k =>
+                {
+                    Unregister(k, entity);
+                });
             }
         }
 
         public void Register(string key, Entity entity)
         {
-            _registeredEntities[key] = entity;
+            if (!_registeredEntities.ContainsKey(key))
+            {
+                _registeredEntities[key] = new List<Entity>();
+            }
+            _registeredEntities[key].Add(entity);
         }
 
-        public void Unregister(string key)
+        public void Unregister(string key, Entity entity)
         {
-            _registeredEntities.Remove(key);
+            if (!_registeredEntities.ContainsKey(key))
+            {
+                _registeredEntities[key] = new List<Entity>();
+            }
+            _registeredEntities[key].Remove(entity);
         }
 
-        public void Send(string key, Entity entity, Message message)
+        public void Send(string key, Entity entity, IMessage message)
         {
-            Entity e = _registeredEntities[key];
+            List<Entity> e = _registeredEntities[key];
             if (e != null)
             {
-                e.Receive(entity, message);
+                e.ForEach((x) => x.Receive(entity, message));
             }
         }
 
         public override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+
+            _entities.ForEach((e) =>
+            {
+                if (e.Active)
+                {
+                    e.Update(gameTime);
+                }
+            });
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+
+            _entities.ForEach((e) =>
+            {
+                if (e.Active)
+                {
+                    e.Draw(gameTime);
+                }
+            });
         }
     }
 }

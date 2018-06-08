@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,16 +16,18 @@ namespace JRPG.EntityComponent
 
         public T GetComponent<T>() where T : Component => GetOwner()?.GetComponent<T>();
 
-        public void Send(string key, Message message)
+        public void Send(string key, IMessage message)
         {
             GetOwner().Send(key, message);
         }
 
-        public void Send(Message message)
+        public void Send(IMessage message)
         {
             GetOwner().Send(message);
         }
 
-        public abstract void Receive(Entity entity, Message message);        
+        public abstract void Update(GameTime gameTime);
+        public abstract void Draw(GameTime gameTime);
+        public abstract void Receive(Entity entity, IMessage message);        
     }
 }
