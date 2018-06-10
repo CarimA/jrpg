@@ -46,6 +46,7 @@
     <Compile Include="EntityComponent\Components\Input.cs" />
     <Compile Include="EntityComponent\Entity.cs" />
     <Compile Include="EntityComponent\EntityFactory.cs" />
+    <Compile Include="EntityComponent\EntityList.cs" />
     <Compile Include="EntityComponent\EntityManager.cs" />
     <Compile Include="EntityComponent\IMessage.cs" />
     <Compile Include="EntityComponent\Messages\ButtonPressed.cs" />

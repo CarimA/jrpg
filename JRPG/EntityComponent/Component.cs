@@ -15,11 +15,7 @@ namespace JRPG.EntityComponent
         public Entity GetOwner() => _entity;
 
         public T GetComponent<T>() where T : Component => GetOwner()?.GetComponent<T>();
-
-        public void Send(string key, IMessage message)
-        {
-            GetOwner().Send(key, message);
-        }
+        
 
         public void Send(IMessage message)
         {

@@ -11,9 +11,10 @@ namespace JRPG.EntityComponent
     {
         private EntityManager _entityManager;
 
-
         private readonly List<Type> _componentTypes;
         private readonly List<Component> _components;
+
+        public readonly List<string> Tags;
 
         public bool Active;
         public int Priority;
@@ -23,13 +24,18 @@ namespace JRPG.EntityComponent
             _entityManager = entityManager;
             _componentTypes = new List<Type>();
             _components = new List<Component>();
+            Tags = new List<string>();
             Active = true;
             Priority = priority;
         }
 
-        public bool HasComponent<T>() where T : Component => _componentTypes.Exists(c => c == typeof(T));
-        public T GetComponent<T>() where T : Component => _components.Find(c => c.GetType() == typeof(T)) as T;
+        public EntityManager GetManager => _entityManager;
+        public EntityList Siblings => GetManager.Entities;
 
+        public bool HasComponent<T>() where T : Component => _componentTypes.Exists(c => c == typeof(T));
+        public bool HasComponent(Type t) => _componentTypes.Exists(c => c == t);
+        public T GetComponent<T>() where T : Component => _components.Find(c => c.GetType() == typeof(T)) as T;
+        
         public void AddComponent(Component component)
         {
             _componentTypes.Add(component.GetType());
@@ -44,17 +50,15 @@ namespace JRPG.EntityComponent
             _components.Remove(component);
         }
 
+        public void AddTag(string tag) => Tags.Add(tag);
+        public void RemoveTag(string tag) => Tags.Remove(tag);
+
         public void Clear() => _components.ForEach((c) => RemoveComponent(c));
 
         public void Destroy()
         {
             Clear();
             _entityManager.RemoveEntity(this);
-        }
-
-        public void Send(string key, IMessage message)
-        {
-            _entityManager.Send(key, this, message);
         }
 
         public void Send(IMessage message)
