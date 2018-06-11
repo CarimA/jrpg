@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent.Messages
 {
-    public struct MovePosition : IMessage
+    public struct SetPosition : IMessage
     {
-        public Vector2 DeltaPosition;
+        public Vector2 NewPosition;
 
-        public MovePosition(Vector2 deltaPosition)
+        public SetPosition(Vector2 newPosition)
         {
-            DeltaPosition = deltaPosition;
+            NewPosition = newPosition;
         }
     }
 }

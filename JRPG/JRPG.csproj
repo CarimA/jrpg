@@ -55,6 +55,7 @@
     <Compile Include="EntityComponent\IMessage.cs" />
     <Compile Include="EntityComponent\Messages\ButtonPressed.cs" />
     <Compile Include="EntityComponent\Messages\ButtonReleased.cs" />
+    <Compile Include="EntityComponent\Messages\SetPosition.cs" />
     <Compile Include="EntityComponent\Messages\Thumbstick.cs" />
     <Compile Include="EntityComponent\Messages\MovePosition.cs" />
     <Compile Include="MainGame.cs" />

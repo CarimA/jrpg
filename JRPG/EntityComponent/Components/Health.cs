@@ -15,17 +15,17 @@ namespace JRPG.EntityComponent.Components
 
         public override void Draw(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Receive(Entity entity, IMessage message)
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
     }
 }

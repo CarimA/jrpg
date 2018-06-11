@@ -14,16 +14,25 @@ namespace JRPG.EntityComponent.Components
 
         public override void Draw(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Receive(Entity entity, IMessage message)
         {
+            if (message is MovePosition msgMP)
+            {
+                Pos += msgMP.DeltaPosition;
+            }
+
+            if (message is SetPosition msgSP)
+            {
+                Pos = msgSP.NewPosition;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            GetOwner().GetManager.Game.Window.Title = Pos.ToString();
         }
     }
 }

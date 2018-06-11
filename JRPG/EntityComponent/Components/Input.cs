@@ -16,6 +16,8 @@ namespace JRPG.EntityComponent.Components
             Cancel
         }
 
+        private PlayerIndex _playerIndex;
+
         public const Buttons ACTION_BUTTON = Buttons.A;
         public const Buttons CANCEL_BUTTON = Buttons.B;
 
@@ -32,9 +34,9 @@ namespace JRPG.EntityComponent.Components
         private Vector2 _leftStick;
         private Vector2 _rightStick;
 
-        public Input() : base()
+        public Input(PlayerIndex playerIndex) : base()
         {
-
+            _playerIndex = playerIndex;
         }
 
         public override void Draw(GameTime gameTime)
@@ -77,7 +79,7 @@ namespace JRPG.EntityComponent.Components
             // now check for mouse input (if applicable)
 
             // now check for gamepad input (if applicable)
-            GamePadState gamePad = GamePad.GetState(PlayerIndex.One);
+            GamePadState gamePad = GamePad.GetState(_playerIndex);
 
             leftStick += new Vector2(gamePad.ThumbSticks.Left.X, gamePad.ThumbSticks.Left.Y * -1);
             rightStick += new Vector2(gamePad.ThumbSticks.Right.X, gamePad.ThumbSticks.Right.Y * -1);

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using JRPG.EntityComponent.Components;
+using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +10,18 @@ namespace JRPG.EntityComponent
 {
     public partial class Entity
     {
+        public static Entity Player(EntityManager entityManager, PlayerIndex controller)
+        {
+            Entity e = new Entity(entityManager);
+            e.AddComponents(new List<Component>()
+            {
+                new Player(),
+                new Input(controller),
+                new Position(),
+                new Rotation(),
+                new Health()
+            });
+            return e;
+        }
     }
 }

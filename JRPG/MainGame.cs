@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using JRPG.EntityComponent;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -9,6 +10,8 @@ namespace JRPG
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        EntityManager entityManager;
+
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -18,6 +21,10 @@ namespace JRPG
         protected override void Initialize()
         {
             base.Initialize();
+
+            entityManager = new EntityManager(this);
+
+            entityManager.AddEntity(Entity.Player(entityManager, PlayerIndex.One));
         }
 
         protected override void LoadContent()
