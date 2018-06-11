@@ -42,8 +42,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EntityComponent\Component.cs" />
+    <Compile Include="EntityComponent\Components\Bullet.cs" />
     <Compile Include="EntityComponent\Components\Health.cs" />
     <Compile Include="EntityComponent\Components\Input.cs" />
+    <Compile Include="EntityComponent\Components\Player.cs" />
+    <Compile Include="EntityComponent\Components\Position.cs" />
+    <Compile Include="EntityComponent\Components\Rotation.cs" />
     <Compile Include="EntityComponent\Entity.cs" />
     <Compile Include="EntityComponent\EntityFactory.cs" />
     <Compile Include="EntityComponent\EntityList.cs" />
@@ -52,6 +56,7 @@
     <Compile Include="EntityComponent\Messages\ButtonPressed.cs" />
     <Compile Include="EntityComponent\Messages\ButtonReleased.cs" />
     <Compile Include="EntityComponent\Messages\Thumbstick.cs" />
+    <Compile Include="EntityComponent\Messages\MovePosition.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

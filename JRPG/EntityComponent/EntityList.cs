@@ -7,41 +7,39 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent
 {
-    public class EntityList : List<Entity>
+    public class EntityList
     {
         private EntityManager _entityManager;
+        List<Entity> _entities;
 
         public EntityList(EntityManager entityManager)
         {
             _entityManager = entityManager;
+            _entities = new List<Entity>();
         }
 
-        public EntityList FindWithTag(string tag)
+        public Entity this[int index]
         {
-            return (EntityList)(this.Where(e => e.Tags.Contains(tag)));
+            get { return _entities[index]; }
+            set { _entities.Insert(index, value); }
         }
 
-        public EntityList Any(params Type[] Types)
-        {
-            // return entities where _any_ of the types match with the given list
-            return (EntityList)this.Where((c) => Types.ToList().Any(ce => c.HasComponent(ce))).Distinct();
-        }
+        public void Add(Entity entity) => _entities.Add(entity);
+        public bool Remove(Entity entity) => _entities.Remove(entity);
+        public void ForEach(Action<Entity> action) => _entities.ForEach(action);
+        public void Sort(Comparison<Entity> comparison) => _entities.Sort(comparison);
 
-        public EntityList Not(params Type[] Types)
-        {
-            // return entities where _none_ of the types are present
-            return (EntityList)this.Where((c) => Types.ToList().All(ce => !c.HasComponent(ce))).Distinct();
-        }
-
-        public EntityList All(params Type[] Types)
-        {
-            // return entities where _all_ of the types are present
-            return (EntityList)this.Where((c) => Types.ToList().All(ce => c.HasComponent(ce))).Distinct();
-        }
-
+        public EntityList FindWithTag(string tag) => (EntityList)_entities.Where(e => e.Tags.Contains(tag));
+        // return entities where _any_ of the types match with the given list
+        public EntityList Any(params Type[] Types) => (EntityList)_entities.Where((c) => Types.ToList().Any(ce => c.HasComponent(ce))).Distinct();
+        // return entities where _none_ of the types are present
+        public EntityList Except(params Type[] Types) => (EntityList)_entities.Where((c) => Types.ToList().All(ce => !c.HasComponent(ce))).Distinct();
+        // return entities where _all_ of the types are present
+        public EntityList All(params Type[] Types) => (EntityList)_entities.Where((c) => Types.ToList().All(ce => c.HasComponent(ce))).Distinct();
+        
         public void Send(Entity sender, IMessage message)
         {
-            this.ForEach((e) =>
+            _entities.ForEach((e) =>
             {
                 e.Receive(sender, message);
             });

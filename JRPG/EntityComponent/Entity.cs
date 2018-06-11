@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent
 {
-    public class Entity
+    public partial class Entity
     {
         private EntityManager _entityManager;
 

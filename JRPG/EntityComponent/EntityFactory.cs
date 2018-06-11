@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent
 {
-    class EntityFactory
+    public partial class Entity
     {
     }
 }
