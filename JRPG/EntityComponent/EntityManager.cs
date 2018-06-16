@@ -9,6 +9,7 @@ namespace JRPG.EntityComponent
 {
     public class EntityManager : DrawableGameComponent
     {
+        public new MainGame Game => (MainGame)base.Game;
         private readonly EntityList _entities;
 
         public EntityManager(Game game) : base(game)
@@ -19,9 +20,9 @@ namespace JRPG.EntityComponent
 
         public EntityList Entities => _entities;
 
-        public Entity CreateEntity()
+        public Entity CreateEntity(string name = null)
         {
-            Entity entity = new Entity(this);
+            Entity entity = new Entity(this, name);
             AddEntity(entity);
             return entity;
         }

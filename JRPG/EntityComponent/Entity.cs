@@ -9,22 +9,25 @@ namespace JRPG.EntityComponent
 {
     public partial class Entity
     {
+        public MainGame Game => _entityManager.Game;
         private EntityManager _entityManager;
 
         private readonly List<Type> _componentTypes;
         private readonly List<Component> _components;
 
+        public readonly string Name;
         public readonly List<string> Tags;
 
         public bool Active;
         public int Priority;
 
-        public Entity(EntityManager entityManager, int priority = 0)
+        public Entity(EntityManager entityManager, string name, int priority = 0)
         {
             _entityManager = entityManager;
             _componentTypes = new List<Type>();
             _components = new List<Component>();
             Tags = new List<string>();
+            Name = name;
             Active = true;
             Priority = priority;
         }

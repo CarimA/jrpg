@@ -12,7 +12,7 @@ namespace JRPG.EntityComponent
     {
         public static Entity Player(EntityManager entityManager, PlayerIndex controller)
         {
-            Entity e = new Entity(entityManager);
+            Entity e = new Entity(entityManager, "player");
             e.AddComponents(new List<Component>()
             {
                 new Player(),

@@ -11,17 +11,33 @@ namespace JRPG.EntityComponent
     {
         private EntityManager _entityManager;
         List<Entity> _entities;
+        Dictionary<string, Entity> _keyedEntities;
 
         public EntityList(EntityManager entityManager)
         {
             _entityManager = entityManager;
             _entities = new List<Entity>();
+            _keyedEntities = new Dictionary<string, Entity>();
         }
 
         public Entity this[int index]
         {
             get { return _entities[index]; }
-            set { _entities.Insert(index, value); }
+            //set { _entities.Insert(index, value); }
+        }
+
+        public Entity this[string key]
+        {
+            get
+            {
+                if (!_keyedEntities.ContainsKey(key))
+                {
+                    // once it's accesssed, cache it for future use
+                    Entity e = _entities.Where(a => a.Name == key).FirstOrDefault();
+                    _keyedEntities[key] = e ?? throw new KeyNotFoundException();
+                }
+                return _keyedEntities[key];
+            }
         }
 
         public void Add(Entity entity) => _entities.Add(entity);

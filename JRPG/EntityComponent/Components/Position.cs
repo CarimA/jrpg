@@ -32,7 +32,7 @@ namespace JRPG.EntityComponent.Components
 
         public override void Update(GameTime gameTime)
         {
-            GetOwner().GetManager.Game.Window.Title = Pos.ToString();
+            Game.Window.Title = Pos.ToString();
         }
     }
 }

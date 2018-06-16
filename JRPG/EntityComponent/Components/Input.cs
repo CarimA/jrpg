@@ -10,6 +10,7 @@ namespace JRPG.EntityComponent.Components
 {
     public class Input : Component
     {
+        // todo: move into shared classes with data, logic, and messages
         public enum Actions : byte
         {
             Action = 0,
