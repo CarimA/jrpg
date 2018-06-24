@@ -13,8 +13,6 @@ namespace JRPG.EntityComponent
         public Entity GetOwner => _entity;
         public MainGame Game => GetOwner.Game;
 
-
-
         public void Assign(Entity entity) => _entity = entity;
 
         public T GetComponent<T>() where T : Component => GetOwner?.GetComponent<T>();        

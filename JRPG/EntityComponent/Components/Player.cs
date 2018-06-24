@@ -1,5 +1,4 @@
-﻿using JRPG.EntityComponent.Messages;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +28,7 @@ namespace JRPG.EntityComponent.Components
             {
                 if (msgT.Stick == Microsoft.Xna.Framework.Input.Buttons.LeftStick)
                 {
-                    Send(new MovePosition(msgT.Position));
+                    Send(new MovePosition(msgT.Position * 200));
                 }
             }
         }

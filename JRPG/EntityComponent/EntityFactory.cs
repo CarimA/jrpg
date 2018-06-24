@@ -18,8 +18,7 @@ namespace JRPG.EntityComponent
                 new Player(),
                 new Input(controller),
                 new Position(),
-                new Rotation(),
-                new Health()
+                new Rotation()
             });
             return e;
         }

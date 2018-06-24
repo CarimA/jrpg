@@ -1,4 +1,5 @@
 ﻿using JRPG.EntityComponent;
+using JRPG.ServiceLocator;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -22,8 +23,9 @@ namespace JRPG
         {
             base.Initialize();
 
-            entityManager = new EntityManager(this);
+            Locator.ProvideGameInstance(this);            
 
+            entityManager = new EntityManager(this);
             entityManager.AddEntity(Entity.Player(entityManager, PlayerIndex.One));
         }
 
@@ -49,9 +51,7 @@ namespace JRPG
         
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
-            
-
+            GraphicsDevice.Clear(Color.CornflowerBlue);         
 
             base.Draw(gameTime);
         }

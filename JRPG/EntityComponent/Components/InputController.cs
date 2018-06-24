@@ -8,33 +8,8 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent.Components
 {
-    public class Input : Component
+    public partial class Input : Component
     {
-        // todo: move into shared classes with data, logic, and messages
-        public enum Actions : byte
-        {
-            Action = 0,
-            Cancel
-        }
-
-        private PlayerIndex _playerIndex;
-
-        public const Buttons ACTION_BUTTON = Buttons.A;
-        public const Buttons CANCEL_BUTTON = Buttons.B;
-
-        public const Keys ACTION_KEY = Keys.O;
-        public const Keys CANCEL_KEY = Keys.P;
-
-        private bool _lastAction;
-        private bool _lastCancel;
-        private bool _action;
-        private bool _cancel;
-
-        private Vector2 _lastLeftStick;
-        private Vector2 _lastRightStick;
-        private Vector2 _leftStick;
-        private Vector2 _rightStick;
-
         public Input(PlayerIndex playerIndex) : base()
         {
             _playerIndex = playerIndex;
@@ -102,9 +77,11 @@ namespace JRPG.EntityComponent.Components
             // normalise sticks
             if (leftStick != Vector2.Zero)
                 leftStick.Normalize();
+            leftStick *= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (rightStick != Vector2.Zero)
                 rightStick.Normalize();
+            rightStick *= (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             _lastLeftStick = _leftStick;
             _lastRightStick = _rightStick;
@@ -116,20 +93,20 @@ namespace JRPG.EntityComponent.Components
             _action = action;
             _cancel = cancel;
             
-            Send(new Messages.Thumbstick(_leftStick, _leftStick - _lastLeftStick, Buttons.LeftStick));
-            Send(new Messages.Thumbstick(_rightStick, _rightStick - _lastRightStick, Buttons.RightStick));
+            Send(new Thumbstick(_leftStick, _leftStick - _lastLeftStick, Buttons.LeftStick));
+            Send(new Thumbstick(_rightStick, _rightStick - _lastRightStick, Buttons.RightStick));
 
             if (_action && !_lastAction)
-                Send(new Messages.ButtonPressed(Actions.Action));
+                Send(new ButtonPressed(Actions.Action));
 
             if (!_action && _lastAction)
-                Send(new Messages.ButtonReleased(Actions.Action));
+                Send(new ButtonReleased(Actions.Action));
 
             if (_cancel && !_lastCancel)
-                Send(new Messages.ButtonPressed(Actions.Cancel));
+                Send(new ButtonPressed(Actions.Cancel));
 
             if (!_cancel && _lastCancel)
-                Send(new Messages.ButtonReleased(Actions.Cancel));
+                Send(new ButtonReleased(Actions.Cancel));
         }
     }
 }

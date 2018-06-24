@@ -7,23 +7,29 @@ using System.Threading.Tasks;
 
 namespace JRPG.EntityComponent.Components
 {
-    public class Bullet : Component
+    public partial class Position : Component
     {
-        public Entity Owner;
-
         public override void Draw(GameTime gameTime)
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Receive(Entity entity, IMessage message)
         {
-            throw new NotImplementedException();
+            if (message is MovePosition msgMP)
+            {
+                Pos += msgMP.DeltaPosition;
+            }
+
+            if (message is SetPosition msgSP)
+            {
+                Pos = msgSP.NewPosition;
+            }
         }
 
         public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            Game.Window.Title = Pos.ToString();
         }
     }
 }
