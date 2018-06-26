@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace JRPG.ServiceLocator.Services
 {
-    public interface ILogger : IService
+    public interface IText : IService
     {
+        List<string> Maps { get; }
+        List<string> Items { get; }
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace JRPG.ServiceLocator.Services
 {
-    public interface IGraphics
+    public interface IGraphics : IService
     {
+
+        void SetWindowTitle(string title);
     }
 }

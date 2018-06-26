@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using JRPG.ServiceLocator;
+using Microsoft.Xna.Framework;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +26,7 @@ namespace JRPG.EntityComponent
         public Entity(EntityManager entityManager, string name, int priority = 0)
         {
             _entityManager = entityManager;
+            _entityManager.AddEntity(this);
             _componentTypes = new List<Type>();
             _components = new List<Component>();
             Tags = new List<string>();
@@ -86,5 +89,17 @@ namespace JRPG.EntityComponent
         {
             _components.ForEach(c => c.Draw(gameTime));
         }
+
+        /*public string Serialize()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented, new JsonSerializerSettings() { TypeNameHandling = TypeNameHandling.All });
+        }
+
+        public static Entity Deserialize(string text)
+        {
+            Entity e = JsonConvert.DeserializeObject<Entity>(text);
+            e._entityManager = Locator.EC;
+            return e;
+        }*/
     }
 }

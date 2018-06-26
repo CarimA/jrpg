@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace JRPG.ServiceLocator.Services
 {
-    public interface IAudio
+    public interface IAudio : IService
     {
     }
 }
