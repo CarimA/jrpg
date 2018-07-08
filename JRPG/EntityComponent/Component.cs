@@ -18,13 +18,6 @@ namespace JRPG.EntityComponent
 
         public T GetComponent<T>() where T : Component => GetOwner?.GetComponent<T>();        
 
-        public void Send(IMessage message)
-        {
-            GetOwner.Send(message);
-        }
-
         public abstract void Update(GameTime gameTime);
-        public abstract void Draw(GameTime gameTime);
-        public abstract void Receive(Entity entity, IMessage message);        
     }
 }

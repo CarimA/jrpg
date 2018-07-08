@@ -52,13 +52,5 @@ namespace JRPG.EntityComponent
         public EntityList Except(params Type[] Types) => (EntityList)_entities.Where((c) => Types.ToList().All(ce => !c.HasComponent(ce))).Distinct();
         // return entities where _all_ of the types are present
         public EntityList All(params Type[] Types) => (EntityList)_entities.Where((c) => Types.ToList().All(ce => c.HasComponent(ce))).Distinct();
-        
-        public void Send(Entity sender, IMessage message)
-        {
-            _entities.ForEach((e) =>
-            {
-                e.Receive(sender, message);
-            });
-        }
     }
 }

@@ -12,5 +12,10 @@ namespace JRPG.ServiceLocator.Services.Utility
         {
 
         }
+
+        public async Task Wait(float time)
+        {
+            System.Threading.Thread.Sleep((int)(time * 1000));
+        }
     }
 }

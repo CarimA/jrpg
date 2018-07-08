@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace JRPG.ServiceLocator.Services
 {
     public interface IGraphics : IService
     {
+        void Update(GameTime gameTime);
 
         void SetWindowTitle(string title);
     }

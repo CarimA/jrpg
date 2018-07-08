@@ -18,9 +18,10 @@ namespace JRPG.ServiceLocator
             Entity e = new Entity(Service, "player");
             e.AddComponents(new List<Component>()
             {
-                new Player(),
-                new Input((PlayerIndex)controller),
-                new Position()
+                new InputComponent(),
+                new PositionComponent(),
+                new TextureComponent("Debug/player"),
+                new PlayerComponent()
             });
             return e;
         }

@@ -8,5 +8,7 @@ namespace JRPG.ServiceLocator.Services
 {
     public interface IUtility : IService
     {
+        Task Wait(float time);
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -55,13 +56,30 @@ namespace JRPG.EntityComponent
         {
             base.Draw(gameTime);
 
+            // set camera and draw mask/fringe
+            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ViewProjectionTransform);
+
             _entities.ForEach((e) =>
             {
-                if (e.Active)
-                {
-                    e.Draw(gameTime);
-                }
+                e.DrawMask(gameTime);
             });
+
+            _entities.ForEach((e) =>
+            {
+                e.DrawFringe(gameTime);
+            });
+
+            Game.SpriteBatch.End();
+
+            // remove camera and draw UI
+            Game.SpriteBatch.Begin();
+
+            _entities.ForEach((e) =>
+            {
+                e.DrawUI(gameTime);
+            });
+
+            Game.SpriteBatch.End();
         }
     }
 }

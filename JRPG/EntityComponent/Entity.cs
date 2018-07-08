@@ -66,28 +66,50 @@ namespace JRPG.EntityComponent
             Clear();
             _entityManager.RemoveEntity(this);
         }
-
-        public void Send(IMessage message)
-        {
-            Receive(this, message);
-        }
-
-        public void Receive(Entity entity, IMessage message)
-        {
-            _components.ForEach((c) =>
-            {
-                c.Receive(entity, message);
-            });
-        }
-
+       
         public void Update(GameTime gameTime)
         {
             _components.ForEach(c => c.Update(gameTime));
         }
 
-        public void Draw(GameTime gameTime)
+        public void DrawMask(GameTime gameTime)
         {
-            _components.ForEach(c => c.Draw(gameTime));
+            if (!this.Active)
+                return;
+
+            _components.ForEach(c =>
+            {
+                if (c is DrawableComponent)
+                {
+                    (c as DrawableComponent).DrawMask(gameTime);
+                }
+            });
+        }
+        public void DrawFringe(GameTime gameTime)
+        {
+            if (!this.Active)
+                return;
+
+            _components.ForEach(c => 
+            {
+                if (c is DrawableComponent)
+                {
+                    (c as DrawableComponent).DrawFringe(gameTime);
+                }
+            });
+        }
+        public void DrawUI(GameTime gameTime)
+        {
+            if (!this.Active)
+                return;
+
+            _components.ForEach(c =>
+            {
+                if (c is DrawableComponent)
+                {
+                    (c as DrawableComponent).DrawUI(gameTime);
+                }
+            });
         }
 
         /*public string Serialize()

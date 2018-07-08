@@ -13,14 +13,19 @@ namespace JRPG
 {
     public class MainGame : Game
     {
-        GraphicsDeviceManager graphics;
+        public const int TILE_SIZE = 16;
+
+        public GraphicsDeviceManager Graphics;
+        public SpriteBatch SpriteBatch { get => spriteBatch; }
         SpriteBatch spriteBatch;
+        public Camera Camera { get => camera; }
+        Camera camera;
 
         EntityManager entityManager;
 
         public MainGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -28,9 +33,10 @@ namespace JRPG
         {
             base.Initialize();
 
+            camera = new Camera(this);
+
             entityManager = new EntityManager(this);
             Locator.ProvideEC(entityManager);
-            entityManager.AddEntity(Locator.Entity.Player(1));
 
 
             Locator.ProvideGameInstance(this);
@@ -46,7 +52,9 @@ namespace JRPG
             Locator.ProvideScripting(new Scripting());
 
 
-            Locator.Scripting.Execute(Locator.Data.Scripts["titlescreen.txt"]);
+            Locator.Scripting.Execute(Locator.Data.Scripts["testscript"]);
+
+            entityManager.AddEntity(Locator.Entity.Player(1));
         }
 
         protected override void LoadContent()
@@ -63,7 +71,9 @@ namespace JRPG
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            
+
+            Locator.Graphics.Update(gameTime);
+
             base.Update(gameTime);
         }
         

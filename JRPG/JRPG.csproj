@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C4F06880-46A6-4923-B18F-13753C86A858}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JRPG</RootNamespace>
     <AssemblyName>JRPG</AssemblyName>
@@ -40,17 +40,20 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Camera.cs" />
+    <Compile Include="EntityComponent\Components\PlayerComponent.cs" />
+    <Compile Include="EntityComponent\Components\TextureComponent.cs" />
+    <Compile Include="EntityComponent\DrawableComponent.cs" />
     <Compile Include="EntityComponent\Component.cs" />
-    <Compile Include="EntityComponent\Components\InputController.cs" />
-    <Compile Include="EntityComponent\Components\InputModel.cs" />
-    <Compile Include="EntityComponent\Components\Player.cs" />
-    <Compile Include="EntityComponent\Components\PositionController.cs" />
-    <Compile Include="EntityComponent\Components\PositionModel.cs" />
+    <Compile Include="EntityComponent\Components\InputComponent.cs" />
+    <Compile Include="EntityComponent\Components\PositionComponent.cs" />
     <Compile Include="EntityComponent\Entity.cs" />
     <Compile Include="EntityComponent\EntityList.cs" />
     <Compile Include="EntityComponent\EntityManager.cs" />
-    <Compile Include="EntityComponent\IMessage.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
