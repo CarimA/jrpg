@@ -1,6 +1,8 @@
 ﻿using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
+using JRPG.ServiceLocator;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +18,7 @@ namespace JRPG
         private bool isDirty = true;
         public Matrix ProjectionTransform { get; private set; } 
 
-        private Vector2 virtualResolution { get => new Vector2(384, 216); }
+        private Vector2 virtualResolution { get => new Vector2(384, 224); }
         private float aspectRatio { get => virtualResolution.X / virtualResolution.Y; }
         private float scale;
 
@@ -53,17 +55,45 @@ namespace JRPG
             {
                 UpdateProjection();
             };
+        }
+
+        public override void Initialize()
+        {
+            base.Initialize();
             UpdateProjection();
         }
 
         private void UpdateProjection()
         {
-            float width = Game.GraphicsDevice.Viewport.Width / virtualResolution.X;
-            float height = Game.GraphicsDevice.Viewport.Height / virtualResolution.Y;
-            scale = Math.Min(width, height);
+            GraphicsDeviceManager g = Locator.GameInstance.Graphics;
+            g.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
+            g.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
+            g.ApplyChanges();
+
+            int width = g.PreferredBackBufferWidth;
+            int height = (int)(width / aspectRatio + 0.5f);
+            if (height > g.PreferredBackBufferHeight)
+            {
+                height = g.PreferredBackBufferHeight;
+                width = (int)(height * aspectRatio + 0.5f);
+            }
+
+            Viewport v = new Viewport();
+            v.X = (g.PreferredBackBufferWidth / 2) - (width / 2);
+            v.Y = (g.PreferredBackBufferHeight / 2) - (height / 2);
+            v.Width = width;
+            v.Height = height;
+            v.MinDepth = 0;
+            v.MaxDepth = 1;
+            Game.GraphicsDevice.Viewport = v;
+
+            float vwidth = Game.GraphicsDevice.Viewport.Width / virtualResolution.X;
+            float vheight = Game.GraphicsDevice.Viewport.Height / virtualResolution.Y;
+            scale = Math.Min(vwidth, vheight);
 
             ProjectionTransform = Matrix.CreateScale(new Vector3(scale, scale, 1)) *
                 Matrix.CreateTranslation(new Vector3(Game.GraphicsDevice.Viewport.Width * 0.5f, Game.GraphicsDevice.Viewport.Height * 0.5f, 0));
+
         }
 
         public void UpdateView()
