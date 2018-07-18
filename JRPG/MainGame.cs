@@ -20,41 +20,46 @@ namespace JRPG
         SpriteBatch spriteBatch;
         public Camera Camera { get => camera; }
         Camera camera;
+        public MapManager MapManager { get => mapManager; }
+        MapManager mapManager;
 
         EntityManager entityManager;
 
         public MainGame()
         {
             Graphics = new GraphicsDeviceManager(this);
+
+            Window.AllowUserResizing = true;
+            IsMouseVisible = true;
+
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            base.Initialize();
-
-            camera = new Camera(this);
+            Locator.ProvideGameInstance(this);
 
             entityManager = new EntityManager(this);
             Locator.ProvideEC(entityManager);
 
+            var player = Locator.Entity.Player(1);
+            entityManager.AddEntity(player);
 
-            Locator.ProvideGameInstance(this);
+            camera = new Camera(this);
+            camera.SetTarget(player);
+            mapManager = new MapManager(this, player);
 
             Locator.ProvideGraphics(new DebugGraphics());
             Locator.ProvideUtility(new DebugUtility());
-
 
             Locator.ProvideData(new PrototypeData());
             Locator.ProvideText(new EnglishText());
 
             // this must be last
             Locator.ProvideScripting(new Scripting());
-
-
             Locator.Scripting.Execute(Locator.Data.Scripts["testscript"]);
 
-            entityManager.AddEntity(Locator.Entity.Player(1));
+            base.Initialize();
         }
 
         protected override void LoadContent()
@@ -79,7 +84,7 @@ namespace JRPG
         
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);         
+            GraphicsDevice.Clear(Color.Black);         
 
             base.Draw(gameTime);
         }

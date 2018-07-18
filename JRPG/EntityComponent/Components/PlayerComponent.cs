@@ -59,7 +59,7 @@ namespace JRPG.EntityComponent.Components
         {
             PositionComponent position = this.GetComponent<PositionComponent>();
             TextureComponent texture = GetComponent<TextureComponent>();
-            Game.SpriteBatch.Draw(texture.Texture, position.GetPosition(), Color.White);
+            Game.SpriteBatch.Draw(texture.Texture, position.GetPosition() - new Vector2(MainGame.TILE_SIZE / 2, (MainGame.TILE_SIZE / 2) + 16), Color.White);
         }
 
         public override void DrawUI(GameTime gameTime)

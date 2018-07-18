@@ -59,10 +59,16 @@ namespace JRPG.EntityComponent
             // set camera and draw mask/fringe
             Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ViewProjectionTransform);
 
+            // draw map mask
+            Game.MapManager.DrawMask(Game.SpriteBatch);
+
             _entities.ForEach((e) =>
             {
                 e.DrawMask(gameTime);
             });
+
+            // draw map fringe
+            Game.MapManager.DrawFringe(Game.SpriteBatch);
 
             _entities.ForEach((e) =>
             {

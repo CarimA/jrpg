@@ -29,7 +29,6 @@ namespace JRPG.EntityComponent.Components
         public int TileY { get; set; }
         public float SubTileX { get; set; } // ranges from 0 to 1 or 0 to -1, updates over time
         public float SubTileY { get; set; }
-        public bool CanMove { get; set; } = true;
         public Direction MovementDirection { get; set; }
 
         public float MoveSpeed;
@@ -42,19 +41,39 @@ namespace JRPG.EntityComponent.Components
             );
         }
 
+        public void Set(int x, int y)
+        {
+            TileX = x;
+            TileY = y;
+            SubTileX = 0;
+            SubTileY = 0;
+        }
+
         public MovementFailureReason Move(Direction direction, float moveSpeed = 2.25f)
         {
-            if (direction == Direction.None)
-            {
-                return MovementFailureReason.CurrentlyMoving;
-            }
             // move somewhere, return if we can't move yet or if we collide with something
-            if (!CanMove)
+            if (MovementDirection != Direction.None)
             {
                 return MovementFailureReason.CurrentlyMoving;
             }
 
-            CanMove = false;
+            // todo: rewrite in a way that's not dumb
+            switch (direction)
+            {
+                case Direction.Right:
+                    if (Game.MapManager.CurrentMap.SolidAt(TileX + 1, TileY)) return MovementFailureReason.Collision;
+                    break;
+                case Direction.Left:
+                    if (Game.MapManager.CurrentMap.SolidAt(TileX - 1, TileY)) return MovementFailureReason.Collision;
+                    break;
+                case Direction.Up:
+                    if (Game.MapManager.CurrentMap.SolidAt(TileX, TileY - 1)) return MovementFailureReason.Collision;
+                    break;
+                case Direction.Down:
+                    if (Game.MapManager.CurrentMap.SolidAt(TileX, TileY + 1)) return MovementFailureReason.Collision;
+                    break;
+            }
+            
             MoveSpeed = moveSpeed;
             MovementDirection = direction;
 
@@ -78,12 +97,32 @@ namespace JRPG.EntityComponent.Components
                     break;
             }
 
+            if (Game.MapManager.Player == GetOwner)
+            {
+                if (TileY < 0)
+                {
+                    Game.MapManager.Move(Direction.Up);
+                }
+                if (TileX < 0)
+                {
+                    Game.MapManager.Move(Direction.Left);
+                }
+                if (TileY >= Game.MapManager.CurrentMap.MapHeight)
+                {
+                    Game.MapManager.Move(Direction.Down);
+                }
+                if (TileX >= Game.MapManager.CurrentMap.MapWidth)
+                {
+                    Game.MapManager.Move(Direction.Right);
+                }
+            }
+
             return MovementFailureReason.None;
         }
         
         public override void Update(GameTime gameTime)
         {
-            if (CanMove)
+            if (MovementDirection == Direction.None)
             {
                 // just...wait?
             }
@@ -97,7 +136,6 @@ namespace JRPG.EntityComponent.Components
                         {
                             SubTileX = 0;
                             MovementDirection = Direction.None;
-                            CanMove = true;
                         }
                         break;
                     case Direction.Left:
@@ -106,7 +144,6 @@ namespace JRPG.EntityComponent.Components
                         {
                             SubTileX = 0;
                             MovementDirection = Direction.None;
-                            CanMove = true;
                         }
                         break;
                     case Direction.Down:
@@ -115,7 +152,6 @@ namespace JRPG.EntityComponent.Components
                         {
                             SubTileY = 0;
                             MovementDirection = Direction.None;
-                            CanMove = true;
                         }
                         break;
                     case Direction.Up:
@@ -124,7 +160,6 @@ namespace JRPG.EntityComponent.Components
                         {
                             SubTileY = 0;
                             MovementDirection = Direction.None;
-                            CanMove = true;
                         }
                         break;
                 }
