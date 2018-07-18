@@ -16,7 +16,8 @@ namespace JRPG.EntityComponent
 
         public void Assign(Entity entity) => _entity = entity;
 
-        public T GetComponent<T>() where T : Component => GetOwner?.GetComponent<T>();        
+        public T GetComponent<T>() where T : Component => GetOwner?.GetComponent<T>();
+        public bool HasComponent<T>() where T : Component => GetOwner.HasComponent<T>();
 
         public abstract void Update(GameTime gameTime);
     }
