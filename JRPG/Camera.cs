@@ -13,12 +13,14 @@ namespace JRPG
 {
     public class Camera : GameComponent
     {
+        public new MainGame Game => (MainGame)base.Game;
+
         public Matrix ViewProjectionTransform;
 
-        private bool isDirty = true;
+        //private bool isDirty = true;
         public Matrix ProjectionTransform { get; private set; } 
 
-        private Vector2 virtualResolution { get => new Vector2(384, 224); }
+        private Vector2 virtualResolution { get => new Vector2(384, 214); }
         private float aspectRatio { get => virtualResolution.X / virtualResolution.Y; }
         private float scale;
 
@@ -65,7 +67,7 @@ namespace JRPG
 
         private void UpdateProjection()
         {
-            GraphicsDeviceManager g = Locator.GameInstance.Graphics;
+            GraphicsDeviceManager g = Game.Graphics;
             g.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
             g.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
             g.ApplyChanges();

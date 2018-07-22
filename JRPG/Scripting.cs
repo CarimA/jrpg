@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace JRPG.ServiceLocator.Services.Scripting
 {
-    public class Scripting : IScripting
+    public class Scripting //: IScripting
     {
         Engine engine;
 
@@ -22,19 +22,7 @@ namespace JRPG.ServiceLocator.Services.Scripting
             engine = new Engine();
             engine.SetValue("log", new Action<string>(Console.WriteLine));
 
-            engine.SetValue("Audio", Locator.Audio);
-            engine.SetValue("Graphics", Locator.Graphics);
-            engine.SetValue("Input", Locator.Input);
-            engine.SetValue("Logger", Locator.Logger);
-            engine.SetValue("Random", Locator.Random);
-            engine.SetValue("Utility", Locator.Utility);
-            engine.SetValue("Scripting", Locator.Scripting);
-            engine.SetValue("Data", Locator.Data);
-            engine.SetValue("Text", Locator.Text);
-            engine.SetValue("EntityFactory", Locator.Entity);
-            
-
-            engine.SetValue("Globals", Locator.Data.PlayerData);
+            //engine.SetValue("Globals", Locator.Data.PlayerData);
 
             engine.Execute("'use strict';");
         }

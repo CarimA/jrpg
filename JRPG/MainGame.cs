@@ -1,13 +1,9 @@
 ﻿using JRPG.EntityComponent;
-using JRPG.ServiceLocator;
-using JRPG.ServiceLocator.Services.Data;
-using JRPG.ServiceLocator.Services.Graphics;
-using JRPG.ServiceLocator.Services.Scripting;
-using JRPG.ServiceLocator.Services.Text;
-using JRPG.ServiceLocator.Services.Utility;
+using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace JRPG
 {
@@ -37,27 +33,24 @@ namespace JRPG
 
         protected override void Initialize()
         {
-            Locator.ProvideGameInstance(this);
 
             entityManager = new EntityManager(this);
-            Locator.ProvideEC(entityManager);
 
-            var player = Locator.Entity.Player(1);
-            entityManager.AddEntity(player);
+            Entity e = new Entity(entityManager, "player");
+            e.AddComponents(new List<Component>()
+            {
+                new InputComponent(),
+                new PositionComponent(),
+                new TextureComponent("Debug/player"),
+                new PlayerComponent()
+            });
+            entityManager.AddEntity(e);
 
             camera = new Camera(this);
-            camera.SetTarget(player);
-            mapManager = new MapManager(this, player);
-
-            Locator.ProvideGraphics(new DebugGraphics());
-            Locator.ProvideUtility(new DebugUtility());
-
-            Locator.ProvideData(new PrototypeData());
-            Locator.ProvideText(new EnglishText());
-
-            // this must be last
-            Locator.ProvideScripting(new Scripting());
-            Locator.Scripting.Execute(Locator.Data.Scripts["testscript"]);
+            camera.SetTarget(e);
+            mapManager = new MapManager(this, e);
+            
+            //Locator.Scripting.Execute(Locator.Data.Scripts["testscript"]);
 
             base.Initialize();
         }
@@ -76,8 +69,6 @@ namespace JRPG
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            Locator.Graphics.Update(gameTime);
 
             base.Update(gameTime);
         }

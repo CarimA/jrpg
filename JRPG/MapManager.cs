@@ -106,7 +106,6 @@ namespace JRPG
 
             // also todo: HANDLE EXCEPTIONS SERIOUSLY.
 
-            Game.Window.Title = id;
             CurrentMap = Maps.First((m) => m.ID == id);
            // Game.SuppressDraw();
 

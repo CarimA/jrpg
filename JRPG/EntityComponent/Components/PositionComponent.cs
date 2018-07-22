@@ -115,6 +115,7 @@ namespace JRPG.EntityComponent.Components
                 {
                     Game.MapManager.Move(Direction.Right);
                 }
+                Game.Window.Title = $"{Game.MapManager.CurrentMap.ID} - {{{TileX}, {TileY}}}";
             }
 
             return MovementFailureReason.None;
