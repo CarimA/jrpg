@@ -218,7 +218,11 @@
   <object id="38" x="0" y="0" width="48" height="384"/>
   <object id="40" x="144" y="352" width="336" height="32"/>
   <object id="41" x="480" y="256" width="48" height="128"/>
-  <object id="43" x="448" y="192" width="16" height="16"/>
+  <object id="43" x="48" y="336" width="16" height="16">
+   <properties>
+    <property name="script" value="test"/>
+   </properties>
+  </object>
   <object id="44" x="48" y="0" width="48" height="48"/>
   <object id="45" x="96" y="0" width="240" height="16"/>
   <object id="47" x="336" y="0" width="48" height="48"/>

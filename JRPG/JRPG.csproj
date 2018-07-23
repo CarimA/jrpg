@@ -59,7 +59,12 @@
     <Compile Include="MapManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripting.cs" />
+    <Compile Include="Scripting\Command.cs" />
+    <Compile Include="Scripting\Commands\EmptyCommand.cs" />
+    <Compile Include="Scripting\Commands\PlayerControlCommand.cs" />
+    <Compile Include="Scripting\Commands\ShowTextCommand.cs" />
+    <Compile Include="Scripting\Commands\WaitCommand.cs" />
+    <Compile Include="Scripting\ScriptingManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
@@ -87,6 +92,9 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\Scripts\test.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -95,9 +103,7 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripting\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

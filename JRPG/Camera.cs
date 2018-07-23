@@ -1,6 +1,5 @@
 ﻿using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
-using JRPG.ServiceLocator;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -20,7 +19,7 @@ namespace JRPG
         //private bool isDirty = true;
         public Matrix ProjectionTransform { get; private set; } 
 
-        private Vector2 virtualResolution { get => new Vector2(384, 214); }
+        private Vector2 virtualResolution { get => new Vector2(384, 216); }
         private float aspectRatio { get => virtualResolution.X / virtualResolution.Y; }
         private float scale;
 
@@ -93,8 +92,7 @@ namespace JRPG
             float vheight = Game.GraphicsDevice.Viewport.Height / virtualResolution.Y;
             scale = Math.Min(vwidth, vheight);
 
-            ProjectionTransform = Matrix.CreateScale(new Vector3(scale, scale, 1)) *
-                Matrix.CreateTranslation(new Vector3(Game.GraphicsDevice.Viewport.Width * 0.5f, Game.GraphicsDevice.Viewport.Height * 0.5f, 0));
+            ProjectionTransform = Matrix.CreateScale(new Vector3(scale, scale, 1));
 
         }
 
@@ -120,7 +118,8 @@ namespace JRPG
 
             UpdateView();
 
-            ViewProjectionTransform = ViewTransform * ProjectionTransform;
+            ViewProjectionTransform = ViewTransform * (ProjectionTransform *
+                Matrix.CreateTranslation(new Vector3(Game.GraphicsDevice.Viewport.Width * 0.5f, Game.GraphicsDevice.Viewport.Height * 0.5f, 0)));
 
             base.Update(gameTime);
         }

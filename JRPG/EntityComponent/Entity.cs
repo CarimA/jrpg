@@ -1,5 +1,4 @@
-﻿using JRPG.ServiceLocator;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

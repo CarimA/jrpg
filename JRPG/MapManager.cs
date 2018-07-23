@@ -16,6 +16,8 @@ namespace JRPG
 {
     public class MapManager : GameComponent
     {
+        public new MainGame Game => (MainGame)base.Game;
+
         public List<Map> Maps;
         public TiledMapRenderer TmxRenderer;
 
@@ -45,7 +47,7 @@ namespace JRPG
             foreach (string map in maps)
             {
                 string id = Path.GetFileNameWithoutExtension(map);
-                Map m = new Map(Game.Content.Load<TiledMap>(directory + "/" + id), id);
+                Map m = new Map(this, Game.Content.Load<TiledMap>(directory + "/" + id), id);
                 Maps.Add(m);
 
                 // generate a buffer of each map

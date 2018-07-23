@@ -30,6 +30,7 @@ namespace JRPG.EntityComponent.Components
         public float SubTileX { get; set; } // ranges from 0 to 1 or 0 to -1, updates over time
         public float SubTileY { get; set; }
         public Direction MovementDirection { get; set; }
+        public Direction FacingDirection { get; set; }
 
         public float MoveSpeed;
 
@@ -56,6 +57,8 @@ namespace JRPG.EntityComponent.Components
             {
                 return MovementFailureReason.CurrentlyMoving;
             }
+
+            FacingDirection = direction;
 
             // todo: rewrite in a way that's not dumb
             switch (direction)

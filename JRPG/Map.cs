@@ -13,12 +13,15 @@ namespace JRPG
 {
     public class Map
     {
+        private MapManager mapManager;
+
         public string ID;
         public string Name;
 
         public TiledMap MapData;
 
         public bool[,] Collision;
+        public List<string>[,] Scripts;
 
         public Map MapNorth;
         public Map MapSouth;
@@ -34,12 +37,14 @@ namespace JRPG
         public int MapHeight => MapData.Height;
         public int MapWidth => MapData.Width;
 
-        public Map(TiledMap map, string id)
+        public Map(MapManager manager, TiledMap map, string id)
         {
+            mapManager = manager;
             MapData = map;
             ID = id;
             Name = GetProperty("name");
             Collision = new bool[MapWidth, MapHeight];
+            Scripts = new List<string>[MapWidth, MapHeight];
             LoadBoundaryData();
         }
 
@@ -68,6 +73,31 @@ namespace JRPG
                             }
                         }
 
+                    }
+
+                    if (obj is TiledMapRectangleObject && obj.Properties.Where(x => x.Key == "script").Count() > 0)
+                    {
+
+                        Vector2 pos = (obj as TiledMapRectangleObject).Position;
+                        Size2 size = (obj as TiledMapRectangleObject).Size;
+
+                        Rectangle rect = new Rectangle(
+                            (int)(pos.X / MapData.TileWidth),
+                            (int)(pos.Y / MapData.TileHeight),
+                            (int)(size.Width / MapData.TileWidth),
+                            (int)(size.Height / MapData.TileHeight));
+
+                        for (int x = rect.Left; x < rect.Right; x++)
+                        {
+                            for (int y = rect.Top; y < rect.Bottom; y++)
+                            {
+                                if (Scripts[x, y] == null)
+                                {
+                                    Scripts[x, y] = new List<string>();
+                                }
+                                Scripts[x, y].Add(obj.Properties["script"]);
+                            }
+                        }
                     }
 
                     // todo: handle scripts, warps, etc etc
@@ -166,6 +196,41 @@ namespace JRPG
         }
 
         public string GetProperty(string id) => MapData.Properties.ContainsKey(id) ? MapData.Properties[id] : null;
+
+        public void Interact(int x, int y)
+        {
+            // if it's out of bounds, find the according map and try to place it there
+            // if it's still out of bounds or a map doesn't exist there, just return true
+
+            if (x < 0)
+            {
+                MapWest?.Interact(MapWest.MapWidth + x - 1, y);
+                return;
+            }
+            if (x >= MapWidth)
+            {
+                MapEast?.Interact(MapWidth - x, y);
+                return;
+            }
+            if (y < 0)
+            {
+                MapNorth?.Interact(x, MapNorth.MapHeight + y - 1);
+                return;
+            }
+            if (y >= MapHeight)
+            {
+                MapSouth?.Interact(x, MapHeight - y);
+                return;
+            }
+
+            if (Scripts[x, y] != null)
+            {
+                foreach (var c in Scripts[x, y])
+                {
+                    mapManager.Game.ScriptingManager.RunScript(c);
+                }
+            }
+        }
 
         public bool SolidAt(int x, int y)
         {

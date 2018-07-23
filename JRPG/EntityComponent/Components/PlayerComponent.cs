@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.BitmapFonts;
+using static JRPG.EntityComponent.Components.PositionComponent;
 
 namespace JRPG.EntityComponent.Components
 {
@@ -12,6 +14,7 @@ namespace JRPG.EntityComponent.Components
         public float WalkSpeed = 75f;
         public float RunSpeed = 170f;
         public bool RunToggled = false;
+        public bool InControl = true;
 
         public override void Update(GameTime gameTime)
         {
@@ -27,26 +30,69 @@ namespace JRPG.EntityComponent.Components
                 Game.Graphics.ApplyChanges();
             }
 
-            if (input.ButtonPressed("run"))
+            if (InControl)
             {
-                RunToggled = !RunToggled;
-            }
+                if (input.ButtonPressed("action"))
+                {
+                    Direction direction = position.FacingDirection;
+                    switch (direction)
+                    {
+                        case Direction.Right:
+                            Game.MapManager.CurrentMap.Interact(position.TileX + 1, position.TileY);
+                            break;
+                        case Direction.Left:
+                            Game.MapManager.CurrentMap.Interact(position.TileX - 1, position.TileY);
+                            break;
+                        case Direction.Up:
+                            Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY - 1);
+                            break;
+                        case Direction.Down:
+                            Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY + 1);
+                            break;
+                    }
+                }
 
-            if (input.ButtonDown("up") || input.ButtonDown("up-alt"))
-            {
-                position.Move(PositionComponent.Direction.Up, RunToggled ? 6.5f : 2.25f);
-            }
-            if (input.ButtonDown("down") || input.ButtonDown("down-alt"))
-            {
-                position.Move(PositionComponent.Direction.Down, RunToggled ? 6.5f : 2.25f);
-            }
-            if (input.ButtonDown("left") || input.ButtonDown("left-alt"))
-            {
-                position.Move(PositionComponent.Direction.Left, RunToggled ? 6.5f : 2.25f);
-            }
-            if (input.ButtonDown("right") || input.ButtonDown("right-alt"))
-            {
-                position.Move(PositionComponent.Direction.Right, RunToggled ? 6.5f : 2.25f);
+                if (input.ButtonPressed("run"))
+                {
+                    RunToggled = !RunToggled;
+                }
+
+                float runSpeed = RunToggled ? 6.5f : 2.25f;
+                Vector2 walkDir = Vector2.Zero;
+
+                if (input.ButtonDown("up") || input.ButtonDown("up-alt"))
+                {
+                    walkDir.Y--;
+                }
+                if (input.ButtonDown("down") || input.ButtonDown("down-alt"))
+                {
+                    walkDir.Y++;
+                }
+                if (input.ButtonDown("left") || input.ButtonDown("left-alt"))
+                {
+                    walkDir.X--;
+                }
+                if (input.ButtonDown("right") || input.ButtonDown("right-alt"))
+                {
+                    walkDir.X++;
+                }
+
+                if (walkDir.X < 0)
+                {
+                    position.Move(PositionComponent.Direction.Left, runSpeed);
+                }
+                else if (walkDir.X > 0)
+                {
+                    position.Move(PositionComponent.Direction.Right, runSpeed);
+                }
+                else if (walkDir.Y < 0)
+                {
+                    position.Move(PositionComponent.Direction.Up, runSpeed);
+                }
+                else if (walkDir.Y > 0)
+                {
+                    position.Move(PositionComponent.Direction.Down, runSpeed);
+                }
             }
         }
 

@@ -1,8 +1,10 @@
 ﻿using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
+using JRPG.Scripting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.BitmapFonts;
 using System.Collections.Generic;
 
 namespace JRPG
@@ -11,6 +13,8 @@ namespace JRPG
     {
         public const int TILE_SIZE = 16;
 
+        public static BitmapFont Font;
+
         public GraphicsDeviceManager Graphics;
         public SpriteBatch SpriteBatch { get => spriteBatch; }
         SpriteBatch spriteBatch;
@@ -18,8 +22,13 @@ namespace JRPG
         Camera camera;
         public MapManager MapManager { get => mapManager; }
         MapManager mapManager;
+        public Entity Player { get => player; }
+        Entity player;
 
         EntityManager entityManager;
+
+        public ScriptingManager ScriptingManager { get => scriptingManager; }
+        ScriptingManager scriptingManager;
 
         public MainGame()
         {
@@ -36,28 +45,36 @@ namespace JRPG
 
             entityManager = new EntityManager(this);
 
-            Entity e = new Entity(entityManager, "player");
-            e.AddComponents(new List<Component>()
+            player = new Entity(entityManager, "player");
+            player.AddComponents(new List<Component>()
             {
                 new InputComponent(),
                 new PositionComponent(),
                 new TextureComponent("Debug/player"),
                 new PlayerComponent()
             });
-            entityManager.AddEntity(e);
+            entityManager.AddEntity(player);
 
             camera = new Camera(this);
-            camera.SetTarget(e);
-            mapManager = new MapManager(this, e);
-            
+            camera.SetTarget(player);
+            mapManager = new MapManager(this, player);
+
+            scriptingManager = new ScriptingManager(this);
+
             //Locator.Scripting.Execute(Locator.Data.Scripts["testscript"]);
 
             base.Initialize();
+
+
+            //scriptingManager.Execute("var t = wait(5); log(t);");
+
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            Font = Content.Load<BitmapFont>("Fonts/pixellari");
         }
         
         protected override void UnloadContent()

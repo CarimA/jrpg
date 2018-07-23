@@ -67,23 +67,32 @@ namespace JRPG.EntityComponent
                 e.DrawMask(gameTime);
             });
 
+            // draw event mask
+            Game.ScriptingManager.DrawMask(gameTime);
+
             // draw map fringe
             Game.MapManager.DrawFringe(Game.SpriteBatch);
+
 
             _entities.ForEach((e) =>
             {
                 e.DrawFringe(gameTime);
             });
 
+            // draw event fringe
+            Game.ScriptingManager.DrawFringe(gameTime);
+
             Game.SpriteBatch.End();
 
             // remove camera and draw UI
-            Game.SpriteBatch.Begin();
+            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ProjectionTransform);
 
             _entities.ForEach((e) =>
             {
                 e.DrawUI(gameTime);
             });
+
+            Game.ScriptingManager.DrawUI(gameTime);
 
             Game.SpriteBatch.End();
         }
