@@ -93,8 +93,14 @@ namespace JRPG.Scripting.Commands
                         return;
                     }
 
+                    if (char.IsLetterOrDigit(fullText[curChar]))
+                    {
+                        // play sound
+                    }
+
                     if (fullText[curChar] == '\n')
                     {
+                        renderTime += (1f / renderSpeed) * 6f;
                         newLinePos.Add(curChar + 1);
                         if (newLinePos.Count() > 3)
                         {
