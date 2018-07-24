@@ -32,26 +32,6 @@ namespace JRPG.EntityComponent.Components
 
             if (InControl)
             {
-                if (input.ButtonPressed("action"))
-                {
-                    Direction direction = position.FacingDirection;
-                    switch (direction)
-                    {
-                        case Direction.Right:
-                            Game.MapManager.CurrentMap.Interact(position.TileX + 1, position.TileY);
-                            break;
-                        case Direction.Left:
-                            Game.MapManager.CurrentMap.Interact(position.TileX - 1, position.TileY);
-                            break;
-                        case Direction.Up:
-                            Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY - 1);
-                            break;
-                        case Direction.Down:
-                            Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY + 1);
-                            break;
-                    }
-                }
-
                 if (input.ButtonPressed("run"))
                 {
                     RunToggled = !RunToggled;
@@ -92,6 +72,29 @@ namespace JRPG.EntityComponent.Components
                 else if (walkDir.Y > 0)
                 {
                     position.Move(PositionComponent.Direction.Down, runSpeed);
+                }
+                
+                if (position.MovementDirection == Direction.None)
+                {
+                    if (input.ButtonPressed("action"))
+                    {
+                        Direction direction = position.FacingDirection;
+                        switch (direction)
+                        {
+                            case Direction.Right:
+                                Game.MapManager.CurrentMap.Interact(position.TileX + 1, position.TileY);
+                                break;
+                            case Direction.Left:
+                                Game.MapManager.CurrentMap.Interact(position.TileX - 1, position.TileY);
+                                break;
+                            case Direction.Up:
+                                Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY - 1);
+                                break;
+                            case Direction.Down:
+                                Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY + 1);
+                                break;
+                        }
+                    }
                 }
             }
         }
