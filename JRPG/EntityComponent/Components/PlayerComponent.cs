@@ -30,6 +30,11 @@ namespace JRPG.EntityComponent.Components
                 Game.Graphics.ApplyChanges();
             }
 
+            if (input.ButtonPressed("screenshot"))
+            {
+                Game.SaveScreenshot();
+            }
+
             if (InControl)
             {
                 if (input.ButtonPressed("run"))

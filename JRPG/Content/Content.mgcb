@@ -3,9 +3,9 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:Windows
+/platform:DesktopGL
 /config:
-/profile:Reach
+/profile:HiDef
 /compress:False
 
 #-------------------------------- References --------------------------------#
@@ -89,4 +89,35 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Interfaces/textbox.png
+
+#begin palette.fx
+/importer:EffectImporter
+/processor:EffectProcessor
+/processorParam:DebugMode=Debug
+/processorParam:Defines=
+/build:palette.fx
+
+#begin Interfaces/proj.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Interfaces/proj.png
+
+#begin Interfaces/proj3.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=True
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Interfaces/proj3.png
 

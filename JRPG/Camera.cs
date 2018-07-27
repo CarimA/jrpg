@@ -13,16 +13,8 @@ namespace JRPG
     public class Camera : GameComponent
     {
         public new MainGame Game => (MainGame)base.Game;
-
-        public Matrix ViewProjectionTransform;
-
-        //private bool isDirty = true;
-        public Matrix ProjectionTransform { get; private set; } 
-
-        private Vector2 virtualResolution { get => new Vector2(384, 216); }
-        private float aspectRatio { get => virtualResolution.X / virtualResolution.Y; }
-        private float scale;
-
+        
+        public Matrix UITransform { get; private set; }
         public Matrix ViewTransform { get; private set; }
         public float Rotation { get; set; } = 0f;
         public float Zoom { get; set; } = 1f;
@@ -36,9 +28,9 @@ namespace JRPG
             {
                 var inverseViewMatrix = Matrix.Invert(ViewTransform);
                 var tl = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
-                var tr = Vector2.Transform(new Vector2(virtualResolution.X, 0), inverseViewMatrix);
-                var bl = Vector2.Transform(new Vector2(0, virtualResolution.Y), inverseViewMatrix);
-                var br = Vector2.Transform(virtualResolution, inverseViewMatrix);
+                var tr = Vector2.Transform(new Vector2(MainGame.GAME_WIDTH, 0), inverseViewMatrix);
+                var bl = Vector2.Transform(new Vector2(0, MainGame.GAME_HEIGHT), inverseViewMatrix);
+                var br = Vector2.Transform(new Vector2(MainGame.GAME_WIDTH, MainGame.GAME_HEIGHT), inverseViewMatrix);
                 var min = new Vector2(
                     MathHelper.Min(tl.X, MathHelper.Min(tr.X, MathHelper.Min(bl.X, br.X))),
                     MathHelper.Min(tl.Y, MathHelper.Min(tr.Y, MathHelper.Min(bl.Y, br.Y))));
@@ -52,55 +44,20 @@ namespace JRPG
         public Camera(Game game) : base(game)
         {
             game.Components.Add(this);
-            game.Window.ClientSizeChanged += (object sender, EventArgs e) =>
-            {
-                UpdateProjection();
-            };
         }
 
         public override void Initialize()
         {
             base.Initialize();
-            UpdateProjection();
-        }
-
-        private void UpdateProjection()
-        {
-            GraphicsDeviceManager g = Game.Graphics;
-            g.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
-            g.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
-            g.ApplyChanges();
-
-            int width = g.PreferredBackBufferWidth;
-            int height = (int)(width / aspectRatio + 0.5f);
-            if (height > g.PreferredBackBufferHeight)
-            {
-                height = g.PreferredBackBufferHeight;
-                width = (int)(height * aspectRatio + 0.5f);
-            }
-
-            Viewport v = new Viewport();
-            v.X = (g.PreferredBackBufferWidth / 2) - (width / 2);
-            v.Y = (g.PreferredBackBufferHeight / 2) - (height / 2);
-            v.Width = width;
-            v.Height = height;
-            v.MinDepth = 0;
-            v.MaxDepth = 1;
-            Game.GraphicsDevice.Viewport = v;
-
-            float vwidth = Game.GraphicsDevice.Viewport.Width / virtualResolution.X;
-            float vheight = Game.GraphicsDevice.Viewport.Height / virtualResolution.Y;
-            scale = Math.Min(vwidth, vheight);
-
-            ProjectionTransform = Matrix.CreateScale(new Vector3(scale, scale, 1));
-
         }
 
         public void UpdateView()
         {
+            UITransform = Matrix.Identity;
             ViewTransform = Matrix.CreateTranslation(new Vector3(-Translate.X, -Translate.Y, 0)) *
                 Matrix.CreateRotationZ(Rotation) *
-                Matrix.CreateScale(new Vector3(Zoom, Zoom, 1));
+                Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
+                Matrix.CreateTranslation(new Vector3(MainGame.GAME_WIDTH * 0.5f, MainGame.GAME_HEIGHT * 0.5f, 0));
         }
 
         public void SetTarget(Entity entity)
@@ -118,14 +75,11 @@ namespace JRPG
 
             UpdateView();
 
-            ViewProjectionTransform = ViewTransform * (ProjectionTransform *
-                Matrix.CreateTranslation(new Vector3(Game.GraphicsDevice.Viewport.Width * 0.5f, Game.GraphicsDevice.Viewport.Height * 0.5f, 0)));
-
             base.Update(gameTime);
         }
 
-        public Vector2 WorldToScreen(Vector2 position) => Vector2.Transform(position, ViewProjectionTransform);
-        public Vector2 ScreenToWorld(Vector2 position) => Vector2.Transform(position, Matrix.Invert(ViewProjectionTransform));
+        public Vector2 WorldToScreen(Vector2 position) => Vector2.Transform(position, ViewTransform);
+        public Vector2 ScreenToWorld(Vector2 position) => Vector2.Transform(position, Matrix.Invert(ViewTransform));
 
         public bool IsInBounds(Rectangle rect) => VisibleArea.Contains(rect) || VisibleArea.Intersects(rect);
     }

@@ -23,7 +23,8 @@ namespace JRPG.EntityComponent.Components
             new Tuple<string, Buttons?, Keys?>("action", Buttons.A, Keys.Z),
             new Tuple<string, Buttons?, Keys?>("cancel", Buttons.B, Keys.X),
             new Tuple<string, Buttons?, Keys?>("run", Buttons.B, Keys.X),
-            new Tuple<string, Buttons?, Keys?>("fullscreen", null, Keys.F1)
+            new Tuple<string, Buttons?, Keys?>("fullscreen", null, Keys.F1),
+            new Tuple<string, Buttons?, Keys?>("screenshot", null, Keys.F2)
         };
 
         public Dictionary<string, bool> lastPressed;

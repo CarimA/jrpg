@@ -57,7 +57,7 @@ namespace JRPG.EntityComponent
             base.Draw(gameTime);
 
             // set camera and draw mask/fringe
-            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ViewProjectionTransform);
+            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ViewTransform);
 
             // draw map mask
             Game.MapManager.DrawMask(Game.SpriteBatch);
@@ -85,7 +85,7 @@ namespace JRPG.EntityComponent
             Game.SpriteBatch.End();
 
             // remove camera and draw UI
-            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.ProjectionTransform);
+            Game.SpriteBatch.Begin(SpriteSortMode.Deferred, null, SamplerState.PointClamp, null, null, null, Game.Camera.UITransform);
 
             _entities.ForEach((e) =>
             {
