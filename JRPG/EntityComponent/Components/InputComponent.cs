@@ -10,30 +10,29 @@ namespace JRPG.EntityComponent.Components
 {
     public class InputComponent : Component
     {
-        public List<Tuple<string, Buttons?, Keys?>> Actions = new List<Tuple<string, Buttons?, Keys?>>()
+        public List<Tuple<string, List<Buttons>, List<Keys>>> Actions = new List<Tuple<string, List<Buttons>, List<Keys>>>()
         {
-            new Tuple<string, Buttons?, Keys?>("up", Buttons.LeftThumbstickUp, Keys.Up),
-            new Tuple<string, Buttons?, Keys?>("down", Buttons.LeftThumbstickDown, Keys.Down),
-            new Tuple<string, Buttons?, Keys?>("left", Buttons.LeftThumbstickLeft, Keys.Left),
-            new Tuple<string, Buttons?, Keys?>("right", Buttons.LeftThumbstickRight, Keys.Right),
-            new Tuple<string, Buttons?, Keys?>("up-alt", Buttons.DPadUp, Keys.W),
-            new Tuple<string, Buttons?, Keys?>("down-alt", Buttons.DPadDown, Keys.S),
-            new Tuple<string, Buttons?, Keys?>("left-alt", Buttons.DPadLeft, Keys.A),
-            new Tuple<string, Buttons?, Keys?>("right-alt", Buttons.DPadRight, Keys.D),
-            new Tuple<string, Buttons?, Keys?>("action", Buttons.A, Keys.Z),
-            new Tuple<string, Buttons?, Keys?>("cancel", Buttons.B, Keys.X),
-            new Tuple<string, Buttons?, Keys?>("run", Buttons.B, Keys.X),
-            new Tuple<string, Buttons?, Keys?>("fullscreen", null, Keys.F1),
-            new Tuple<string, Buttons?, Keys?>("screenshot", null, Keys.F2)
+            new Tuple<string, List<Buttons>, List<Keys>>("up", new List<Buttons>() { Buttons.LeftThumbstickUp, Buttons.DPadUp }, new List<Keys>() { Keys.Up, Keys.W }),
+            new Tuple<string, List<Buttons>, List<Keys>>("down", new List<Buttons>() { Buttons.LeftThumbstickDown, Buttons.DPadDown }, new List<Keys>() { Keys.Down, Keys.S }),
+            new Tuple<string, List<Buttons>, List<Keys>>("left", new List<Buttons>() { Buttons.LeftThumbstickLeft, Buttons.DPadLeft }, new List<Keys>() { Keys.Left, Keys.A }),
+            new Tuple<string, List<Buttons>, List<Keys>>("right", new List<Buttons>() { Buttons.LeftThumbstickRight, Buttons.DPadRight }, new List<Keys>() { Keys.Right, Keys.D }),
+
+            new Tuple<string, List<Buttons>, List<Keys>>("action", new List<Buttons>() { Buttons.A }, new List<Keys>() { Keys.Z }),
+            new Tuple<string, List<Buttons>, List<Keys>>("cancel", new List<Buttons>() { Buttons.B }, new List<Keys>() { Keys.X }),
+            new Tuple<string, List<Buttons>, List<Keys>>("run", new List<Buttons>() { Buttons.B }, new List<Keys>() { Keys.X }),
+            new Tuple<string, List<Buttons>, List<Keys>>("fullscreen", new List<Buttons>() { }, new List<Keys>() { Keys.F1 }),
+            new Tuple<string, List<Buttons>, List<Keys>>("screenshot", new List<Buttons>() { Buttons.Back }, new List<Keys>() { Keys.F2 }),
         };
 
         public Dictionary<string, bool> lastPressed;
         public Dictionary<string, bool> pressed;
-        
+        private Queue<string> presses;
+
         public InputComponent() : base()
         {
             lastPressed = new Dictionary<string, bool>();
             pressed = new Dictionary<string, bool>();
+            presses = new Queue<string>();
 
             foreach (var a in Actions)
             {
@@ -53,20 +52,43 @@ namespace JRPG.EntityComponent.Components
                 lastPressed[a.Item1] = pressed[a.Item1];
 
                 // todo: handle gamepad/keyboard priority
-                if (gamePad.IsConnected)
+                /*if (gamePad.IsConnected)
                 {
                     if (a.Item2.HasValue)
                     {
                         pressed[a.Item1] = gamePad.IsButtonDown(a.Item2.Value);
                         continue;
                     }
-                }
+                }*/
 
-                if (a.Item3.HasValue)
+
+                pressed[a.Item1] = a.Item2.Where((b) => gamePad.IsButtonDown(b)).Count() > 0 || a.Item3.Where((k) => keyboard.IsKeyDown(k)).Count() > 0;
+                
+
+                if (pressed[a.Item1] && !lastPressed[a.Item1])
                 {
-                    pressed[a.Item1] = keyboard.IsKeyDown(a.Item3.Value);
+                    presses.Enqueue(a.Item1);
+
+                    if (presses.Count > 20)
+                    {
+                        presses.Dequeue();
+                    }
                 }
             }
+        }
+
+        public string PollPress()
+        {
+            if (presses.Count > 0)
+            {
+                return presses.Dequeue();
+            }
+            return "";
+        }
+
+        public void FlushPresses()
+        {
+            presses.Clear();
         }
 
         public bool ButtonPressed(string key) => pressed[key] && !lastPressed[key];

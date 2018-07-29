@@ -58,6 +58,11 @@ namespace JRPG.EntityComponent.Components
                 return MovementFailureReason.CurrentlyMoving;
             }
 
+            if (Game.MapManager.CurrentMap == null)
+            {
+                return MovementFailureReason.CurrentlyMoving;
+            }
+
             FacingDirection = direction;
 
             // todo: rewrite in a way that's not dumb

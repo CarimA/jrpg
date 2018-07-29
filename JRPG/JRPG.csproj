@@ -7,7 +7,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C4F06880-46A6-4923-B18F-13753C86A858}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>JRPG</RootNamespace>
     <AssemblyName>JRPG</AssemblyName>
@@ -47,6 +47,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Camera.cs" />
+    <Compile Include="Data\SaveData.cs" />
+    <Compile Include="Data\DataTree.cs" />
     <Compile Include="EntityComponent\Components\PlayerComponent.cs" />
     <Compile Include="EntityComponent\Components\TextureComponent.cs" />
     <Compile Include="EntityComponent\DrawableComponent.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripting\Command.cs" />
+    <Compile Include="Scripting\Commands\GetTextInputCommand.cs" />
     <Compile Include="Scripting\Commands\EmptyCommand.cs" />
     <Compile Include="Scripting\Commands\PlayerControlCommand.cs" />
     <Compile Include="Scripting\Commands\ShowTextCommand.cs" />
@@ -99,6 +102,9 @@
     <Content Include="Content\Scripts\test.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Content\Text\english.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

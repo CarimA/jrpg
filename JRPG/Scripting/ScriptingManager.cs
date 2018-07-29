@@ -57,6 +57,7 @@ namespace JRPG.Scripting
         {
             //engine.SetValue("Globals", Locator.Data.PlayerData);
             engine.SetValue("log", new Action<string>(Console.WriteLine));
+            engine.SetValue("text", Game.EnglishText);
 
             //engine.SetValue("get_input", new Func<string, string>());
 
@@ -78,6 +79,7 @@ namespace JRPG.Scripting
             new WaitCommand(this, engine);
             new ShowTextCommand(this, engine);
             new PlayerControlCommand(this, engine);
+            new GetTextInputCommand(this, engine);
         }
 
         private void Execute(string script)

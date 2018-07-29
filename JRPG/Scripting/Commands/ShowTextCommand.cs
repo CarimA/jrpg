@@ -17,7 +17,7 @@ namespace JRPG.Scripting.Commands
 
         bool held = true;
 
-        float renderSpeed = 15f;
+        float renderSpeed = 35f;
 
         string fullText;     // full text
 
@@ -37,6 +37,7 @@ namespace JRPG.Scripting.Commands
         public override object Action(params object[] args)
         {
             SetCommand();
+            PlayerData.InControl = false;
 
             renderTime = 0;
             curChar = 0;
@@ -46,11 +47,41 @@ namespace JRPG.Scripting.Commands
             pause = false;
 
             held = true;
-            fullText = args[0].ToString();
+
+            fullText = "";
+
+            string txt = args[0].ToString();
+            string[] tokens = txt.Split(' ');
+
+            string curLine = "";
+            foreach (string token in tokens)
+            {
+                if (token.Contains("\n"))
+                {
+                    curLine += token;
+                    fullText += curLine;
+                    curLine = "";
+                    continue;
+                }
+
+                if (MainGame.Font.MeasureString(curLine + token).Width >= 270)
+                {
+                    curLine += "\n";
+                    fullText += curLine;
+                    curLine = "";
+                }
+
+                curLine += token;
+                curLine += " ";
+            }
+            
+            fullText += curLine;
+            
 
             while (held) ;
 
             ClearCommand();
+            PlayerData.InControl = true;
             return null;
         }
 
@@ -58,9 +89,15 @@ namespace JRPG.Scripting.Commands
 
         public override void Update(GameTime gameTime)
         {
+            if (fullText == null || fullText == "")
+                return;
+
+            InputComponent pin = Player.GetComponent<InputComponent>();
+            string pol = pin.PollPress();
+
             if (finished)
             {
-                bool cont = Player.GetComponent<InputComponent>().ButtonDown("action");
+                bool cont = pol == ("action");
                 if (cont)
                 {
                     held = false;
@@ -70,7 +107,7 @@ namespace JRPG.Scripting.Commands
             {
                 if (pause)
                 {
-                    bool cont = Player.GetComponent<InputComponent>().ButtonDown("action");
+                    bool cont = pol == ("action");
                     if (cont)
                     {
                         pause = false;
@@ -123,6 +160,9 @@ namespace JRPG.Scripting.Commands
 
         public override void DrawUI(GameTime gameTime)
         {
+            if (fullText == null || fullText == "")
+                return;
+
             Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 300 - 10, 216 - 62 - 10, 300, 62), new Rectangle(0, 0, 300, 62), Color.White);
 
             int p = pause ? 1 : 0;

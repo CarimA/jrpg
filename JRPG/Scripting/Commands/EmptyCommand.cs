@@ -22,8 +22,9 @@ namespace JRPG.Scripting.Commands
         public override object Action(params object[] args)
         {
             SetCommand();
-
             held = true;
+
+
 
             while (held) ;
 

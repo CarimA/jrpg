@@ -1,4 +1,5 @@
-﻿using JRPG.EntityComponent;
+﻿using JRPG.Data;
+using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
 using JRPG.Scripting;
 using Microsoft.Xna.Framework;
@@ -46,6 +47,7 @@ namespace JRPG
         public ScriptingManager ScriptingManager { get => scriptingManager; }
         ScriptingManager scriptingManager;
 
+        public DataTree EnglishText;
 
         Effect effect;
         Texture2D palette;
@@ -55,6 +57,8 @@ namespace JRPG
         {
             Graphics = new GraphicsDeviceManager(this);
 
+            EnglishText = DataTree.Load("content/text/english.json");
+            Window.Title = EnglishText.Get("Main").Get("GameName").GetString();
 
             Window.AllowUserResizing = true;
             Window.ClientSizeChanged += (object sender, EventArgs e) =>
@@ -67,7 +71,7 @@ namespace JRPG
             Content.RootDirectory = "Content";
         }
 
-        public void SaveScreenshot()
+        public void SaveScreenshot(bool openURL = true)
         {
             using (MemoryStream mem = new MemoryStream())
             {
@@ -98,6 +102,18 @@ namespace JRPG
                             var val = d.Element("link").Value;
                             Clipboard.SetText(val);
                             Console.WriteLine($"Screenshot uploaded to {val}");
+
+                            if (openURL)
+                            {
+                                try
+                                {
+                                    Process.Start(val);
+                                }
+                                catch (System.ComponentModel.Win32Exception)
+                                {
+                                    Process.Start("IExplore.exe", val);
+                                }
+                            }
                         }
                     }
                 }

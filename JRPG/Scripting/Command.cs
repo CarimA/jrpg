@@ -1,5 +1,6 @@
 ﻿using Jint;
 using JRPG.EntityComponent;
+using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace JRPG.Scripting
     {
         private ScriptingManager scriptingManager;
         public Entity Player => scriptingManager.Game.Player;
+        public PlayerComponent PlayerData;
         public MainGame Game => scriptingManager.Game;
 
         public abstract string Name { get; }
@@ -20,12 +22,14 @@ namespace JRPG.Scripting
         public Command(ScriptingManager manager, Engine engine)
         {
             scriptingManager = manager;
+            PlayerData = Player.GetComponent<PlayerComponent>();
             engine.SetValue(Name, new Func<object[], object>(Action));
         }
 
         public void SetCommand()
         {
             scriptingManager.AddActiveCommand(this);
+            Player.GetComponent<InputComponent>().FlushPresses();
 
             Console.WriteLine("Started command: " + this.GetType());
         }

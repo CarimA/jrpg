@@ -45,19 +45,19 @@ namespace JRPG.EntityComponent.Components
                 float runSpeed = RunToggled ? 6.5f : 2.25f;
                 Vector2 walkDir = Vector2.Zero;
 
-                if (input.ButtonDown("up") || input.ButtonDown("up-alt"))
+                if (input.ButtonDown("up"))
                 {
                     walkDir.Y--;
                 }
-                if (input.ButtonDown("down") || input.ButtonDown("down-alt"))
+                if (input.ButtonDown("down"))
                 {
                     walkDir.Y++;
                 }
-                if (input.ButtonDown("left") || input.ButtonDown("left-alt"))
+                if (input.ButtonDown("left"))
                 {
                     walkDir.X--;
                 }
-                if (input.ButtonDown("right") || input.ButtonDown("right-alt"))
+                if (input.ButtonDown("right"))
                 {
                     walkDir.X++;
                 }
