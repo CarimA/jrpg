@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Jint;
 using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
 
 namespace JRPG.Scripting.Commands
@@ -24,9 +25,11 @@ namespace JRPG.Scripting.Commands
         int x = 0;
         int y = 0;
 
+        Texture2D textbox;
+
         public GetTextInputCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
         {
-
+            textbox = Game.Content.Load<Texture2D>("interfaces/textui");
         }
 
         public override object Action(params object[] args)
@@ -197,21 +200,38 @@ namespace JRPG.Scripting.Commands
 
             BitmapFont font = MainGame.Font;
 
-            Game.SpriteBatch.DrawString(font, title, new Vector2((int)(200 - (font.MeasureString(title).Width / 2)), 40), Color.White);
+            Game.SpriteBatch.Draw(textbox, Vector2.Zero, Color.White);
+            Game.SpriteBatch.Draw(textbox, Vector2.Zero, new Rectangle(24*5, 0, 24*5, 24), Color.White);
+
 
             int row = 0;
             int column = 0;
+
+            int left = 37+6;
+            int top = 55+17;
+            int gutter = 24;
+
+            int highlight_width = y == 5 ? 24 * 4 : 24;
+            int highlight_x = y == 5 ? 0 : 96;
+
+            Game.SpriteBatch.Draw(textbox, new Rectangle(left - 7 + (x * 24), top - 6 + (y * 24), highlight_width, 24), new Rectangle(highlight_x, 0, highlight_width, 24), Color.White);
+
+            Game.SpriteBatch.Draw(textbox, new Rectangle(left, top, 300, 132), new Rectangle(0, 216, 300, 132), Color.White);
+
+            /*
             Color highlight = Color.White;
 
             foreach (char k in keys)
             {
-                highlight = Color.White;
+                highlight = Color.Black;
                 if (row == y && column == x)
                 {
                     highlight = Color.Yellow;
                 }
 
-                Game.SpriteBatch.DrawString(font, k.ToString(), new Vector2(122 + column * 12, 90 + row * 12), highlight);
+                Vector2 charSize = font.MeasureString(k.ToString());
+
+                Game.SpriteBatch.DrawString(font, k.ToString(), new Vector2((int)(left + column * gutter + (charSize.X / 2)), (int)(top + row * gutter + (charSize.Y / 2))), highlight);
 
                 column++;
                 if (column >= 13)
@@ -227,7 +247,8 @@ namespace JRPG.Scripting.Commands
                 highlight = Color.Yellow;
             }
             //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + 8, 150), Color.White);
-            Game.SpriteBatch.DrawString(font, "SPACE", new Vector2(122 + 8 + 24 - (font.MeasureString("SPACE").Width / 2), 150), highlight);
+            Vector2 spaceSize = font.MeasureString("SPACE");
+            Game.SpriteBatch.DrawString(font, "SPACE", new Vector2((int)(left + gutter + (spaceSize.X / 2)), (int)(top + (gutter * 5) + (spaceSize.Y / 2))), highlight);
 
             highlight = Color.White;
             if (y == 5 && (x >= 5 && x <= 8))
@@ -235,7 +256,8 @@ namespace JRPG.Scripting.Commands
                 highlight = Color.Yellow;
             }
             //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + (12 * 4) + 8, 150), Color.White);
-            Game.SpriteBatch.DrawString(font, "DELETE", new Vector2(122 + (12 * 4) + 8 + 24 - (font.MeasureString("DELETE").Width / 2), 150), highlight);
+            Vector2 deleteSize = font.MeasureString("DELETE");
+            Game.SpriteBatch.DrawString(font, "DELETE", new Vector2((int)(left + (gutter * 4) + (deleteSize.X / 2)), (int)(top + (gutter * 5) + (deleteSize.Y / 2))), highlight);
 
             highlight = Color.White;
             if (y == 5 && (x >= 9 && x <= 12))
@@ -243,19 +265,22 @@ namespace JRPG.Scripting.Commands
                 highlight = Color.Yellow;
             }
             //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + (12 * 8) + 8, 150), Color.White);
-            Game.SpriteBatch.DrawString(font, "ENTER", new Vector2(122 + (12 * 8) + 8 + 24 - (font.MeasureString("ENTER").Width / 2), 150), highlight);
-            //spriteBatch.DrawString(font, "@", new Vector2(122 + x * 12, 90 + y * 12), Color.HotPink);
+            Vector2 enterSize = font.MeasureString("ENTER");
+            Game.SpriteBatch.DrawString(font, "ENTER", new Vector2((int)(left + (gutter * 8) + (enterSize.X / 2)), (int)(top + (gutter * 5) + (enterSize.Y / 2))), highlight);
+            //spriteBatch.DrawString(font, "@", new Vector2(122 + x * 12, 90 + y * 12), Color.HotPink);*/
 
-            int calcX = (400 / 2) - ((length * 12) / 2);
+            Game.SpriteBatch.DrawString(font, title, new Vector2((int)((MainGame.GAME_WIDTH / 2) - (font.MeasureString(title).Width / 2)), top - 62), Color.Yellow);
+
+            int calcX = (MainGame.GAME_WIDTH / 2) - ((length * 12) / 2);
             for (int i = 0; i < length; i++)
             {
                 if (i >= input.Length)
                 {
-                    Game.SpriteBatch.DrawString(font, "_", new Vector2(calcX + (12 * i), 55), Color.White);
+                    Game.SpriteBatch.DrawString(font, "_", new Vector2(calcX + (12 * i), top - 45), Color.White);
                 }
                 else
                 {
-                    Game.SpriteBatch.DrawString(font, input[i].ToString(), new Vector2(calcX + (12 * i), 55), Color.White);
+                    Game.SpriteBatch.DrawString(font, input[i].ToString(), new Vector2(calcX + (12 * i), top - 45), Color.White);
                 }
             }
         }

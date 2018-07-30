@@ -11,7 +11,7 @@ namespace JRPG.Scripting.Commands
 {
     public class PlayerControlCommand : Command
     {
-        public override string Name => "player_control";
+        public override string Name => "set_player_control";
 
         bool held;
 

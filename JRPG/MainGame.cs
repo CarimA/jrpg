@@ -26,7 +26,6 @@ namespace JRPG
         private RenderTarget2D renderTarget1;
         private RenderTarget2D renderTarget2;
         Rectangle dest = new Rectangle();
-        private float scale;
 
         public const int TILE_SIZE = 16;
 
@@ -140,9 +139,9 @@ namespace JRPG
             dest.Width = width;
             dest.Height = height;
            
-            float vwidth = GraphicsDevice.Viewport.Width / GAME_WIDTH;
-            float vheight = GraphicsDevice.Viewport.Height / GAME_HEIGHT;
-            scale = Math.Min(vwidth, vheight);
+            //float vwidth = GraphicsDevice.Viewport.Width / GAME_WIDTH;
+            //float vheight = GraphicsDevice.Viewport.Height / GAME_HEIGHT;
+            //scale = (float)Math.Floor(Math.Min(vwidth, vheight));
         }
 
         protected override void Initialize()
@@ -209,7 +208,7 @@ namespace JRPG
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
 
-            /*if (flipflop)
+            if (flipflop)
             {
                 opac -= ((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (opac <= 0f)
@@ -227,8 +226,8 @@ namespace JRPG
             }
 
             spriteBatch.Begin();
-            spriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.Black * opac);
-            spriteBatch.End();*/
+            spriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.DarkSlateGray * opac);
+            spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(renderTarget2);
 
