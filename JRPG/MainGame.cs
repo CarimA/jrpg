@@ -208,7 +208,7 @@ namespace JRPG
             GraphicsDevice.Clear(Color.CornflowerBlue);
             base.Draw(gameTime);
 
-            if (flipflop)
+            /*if (flipflop)
             {
                 opac -= ((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (opac <= 0f)
@@ -223,7 +223,7 @@ namespace JRPG
                 {
                     flipflop = !flipflop;
                 }
-            }
+            }*/
 
             spriteBatch.Begin();
             spriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.DarkSlateGray * opac);
@@ -256,3 +256,19 @@ namespace JRPG
         }
     }
 }
+
+/* todo tasks
+ *      asset manager
+ *      sound/music play
+ *      state machine
+ *          state transition effects
+ *          loading support
+ *          screens
+ *              title screen
+ *              main menu
+ *                  create/use/delete save
+ *                  options
+ *              game
+ *                  
+ *      
+ */
