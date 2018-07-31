@@ -46,6 +46,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="AssetManager.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="Data\SaveData.cs" />
     <Compile Include="Data\DataTree.cs" />
@@ -99,12 +100,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\Scripts\test.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Content\Text\english.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>

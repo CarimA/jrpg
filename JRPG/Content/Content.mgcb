@@ -3,7 +3,7 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:DesktopGL
+/platform:Windows
 /config:
 /profile:HiDef
 /compress:False
@@ -78,48 +78,12 @@
 /processorParam:TextureFormat=Color
 /build:Fonts/pixellari_0.png
 
-#begin Interfaces/textbox.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Interfaces/textbox.png
-
 #begin palette.fx
 /importer:EffectImporter
 /processor:EffectProcessor
 /processorParam:DebugMode=Debug
 /processorParam:Defines=
 /build:palette.fx
-
-#begin Interfaces/proj.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Interfaces/proj.png
-
-#begin Interfaces/proj3.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=False
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=False
-/processorParam:ResizeToPowerOfTwo=True
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Interfaces/proj3.png
 
 #begin Interfaces/controls.png
 /importer:TextureImporter
@@ -133,7 +97,25 @@
 /processorParam:TextureFormat=Color
 /build:Interfaces/controls.png
 
-#begin Interfaces/textui.png
+#begin Text/english.json
+/copy:Text/english.json
+
+#begin Scripts/test.js
+/copy:Scripts/test.js
+
+#begin Interfaces/colourtable.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=False
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=False
+/processorParam:ResizeToPowerOfTwo=True
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Interfaces/colourtable.png
+
+#begin Interfaces/Atlas.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -143,5 +125,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Interfaces/textui.png
+/build:Interfaces/Atlas.png
 

@@ -27,11 +27,13 @@ namespace JRPG.Scripting.Commands
         bool pause = false;
         bool finished = false;
 
-        Texture2D textbox;
+        Texture2D atlas;
+        BitmapFont font;
         
         public ShowTextCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
         {
-            textbox = Game.Content.Load<Texture2D>("Interfaces/textbox");
+            atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
+            font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);
         }
 
         public override object Action(params object[] args)
@@ -64,7 +66,7 @@ namespace JRPG.Scripting.Commands
                     continue;
                 }
 
-                if (MainGame.Font.MeasureString(curLine + token).Width >= 270)
+                if (font.MeasureString(curLine + token).Width >= 270)
                 {
                     curLine += "\n";
                     fullText += curLine;
@@ -163,10 +165,16 @@ namespace JRPG.Scripting.Commands
             if (fullText == null || fullText == "")
                 return;
 
-            Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 300 - 10, 216 - 62 - 10, 300, 62), new Rectangle(0, 0, 300, 62), Color.White);
+            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(74, 144, 300, 62), new Rectangle(0, 0, 18, 18));
+
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 149, 4, 4), new Rectangle(18, 0, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 153, 4, 44), new Rectangle(18, 4, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 197, 4, 4), new Rectangle(18, 8, 4, 4), Color.White);
+
+            // Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 300 - 10, 216 - 62 - 10, 300, 62), new Rectangle(0, 0, 300, 62), Color.White);
 
             int p = pause ? 1 : 0;
-            Game.SpriteBatch.DrawString(MainGame.Font, 
+            Game.SpriteBatch.DrawString(font, 
                 fullText.Substring(
                     newLinePos[Math.Max(0, newLinePos.Count() - 3 - p)], 
                     curChar - newLinePos[Math.Max(0, newLinePos.Count() - 3 - p)]), 
@@ -174,11 +182,11 @@ namespace JRPG.Scripting.Commands
 
             if (pause)
             {
-                Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 23, 216 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 6, 6), new Rectangle(300, 0, 6, 6), Color.White);
+                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23, 216 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 6, 6), new Rectangle(0, 18, 6, 6), Color.White);
             }
             if (finished)
             {
-                Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 216 - 23, 6, 6), new Rectangle(300, 6, 6, 6), Color.White);
+                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 216 - 23, 6, 6), new Rectangle(6, 18, 6, 6), Color.White);
 
             }
         }

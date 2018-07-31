@@ -20,6 +20,8 @@ namespace JRPG
 {
     public class MainGame : Game
     {
+        public AssetManager Assets;
+
         public const int GAME_WIDTH = 384;
         public const int GAME_HEIGHT = 216;
 
@@ -29,32 +31,28 @@ namespace JRPG
 
         public const int TILE_SIZE = 16;
 
-        public static BitmapFont Font;
-
         public GraphicsDeviceManager Graphics;
-        public SpriteBatch SpriteBatch { get => spriteBatch; }
-        SpriteBatch spriteBatch;
-        public Camera Camera { get => camera; }
-        Camera camera;
-        public MapManager MapManager { get => mapManager; }
-        MapManager mapManager;
-        public Entity Player { get => player; }
-        Entity player;
+        public SpriteBatch SpriteBatch { private set; get; }
+        public Camera Camera { private set; get; }
+        public MapManager MapManager { private set; get; }
+        public Entity Player { private set; get; }
 
         EntityManager entityManager;
 
-        public ScriptingManager ScriptingManager { get => scriptingManager; }
-        ScriptingManager scriptingManager;
+        public ScriptingManager ScriptingManager { private set; get; }
 
         public DataTree EnglishText;
 
         Effect effect;
         Texture2D palette;
         Texture2D pixel;
-
+        
         public MainGame()
         {
             Graphics = new GraphicsDeviceManager(this);
+
+            Content.RootDirectory = "Content";
+            Assets = AssetManager.LoadAll(this, Content);
 
             EnglishText = DataTree.Load("content/text/english.json");
             Window.Title = EnglishText.Get("Main").Get("GameName").GetString();
@@ -67,7 +65,6 @@ namespace JRPG
 
             IsMouseVisible = true;
 
-            Content.RootDirectory = "Content";
         }
 
         public void SaveScreenshot(bool openURL = true)
@@ -146,28 +143,28 @@ namespace JRPG
 
         protected override void Initialize()
         {
-            Graphics.PreferredBackBufferWidth = 960;
-            Graphics.PreferredBackBufferHeight = 540;
+            Graphics.PreferredBackBufferWidth = GAME_WIDTH * 3;
+            Graphics.PreferredBackBufferHeight = GAME_HEIGHT * 3;
             Graphics.ApplyChanges();
             UpdateScaleViewport();
 
             entityManager = new EntityManager(this);
 
-            player = new Entity(entityManager, "player");
-            player.AddComponents(new List<Component>()
+            Player = new Entity(entityManager, "player");
+            Player.AddComponents(new List<Component>()
             {
                 new InputComponent(),
                 new PositionComponent(),
                 new TextureComponent("Debug/player"),
                 new PlayerComponent()
             });
-            entityManager.AddEntity(player);
+            entityManager.AddEntity(Player);
 
-            camera = new Camera(this);
-            camera.SetTarget(player);
-            mapManager = new MapManager(this, player);
+            Camera = new Camera(this);
+            Camera.SetTarget(Player);
+            MapManager = new MapManager(this, Player);
 
-            scriptingManager = new ScriptingManager(this);
+            ScriptingManager = new ScriptingManager(this);
 
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
             renderTarget2 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
@@ -177,12 +174,10 @@ namespace JRPG
 
         protected override void LoadContent()
         {
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
 
-            Font = Content.Load<BitmapFont>("Fonts/pixellari");
-
-            effect = Content.Load<Effect>("palette");
-            palette = Content.Load<Texture2D>("interfaces/proj3");
+            effect = Assets.Get<Effect>(AssetManager.Asset.ShadersPalette); // Content.Load<Effect>("palette");
+            palette = Assets.Get<Texture2D>(AssetManager.Asset.InterfacesColourTable); // Content.Load<Texture2D>("interfaces/proj3");
 
             pixel = new Texture2D(GraphicsDevice, 1, 1);
             pixel.SetData<Color>(new Color[1] { Color.White });
@@ -192,12 +187,13 @@ namespace JRPG
         {
 
         }
-        
+
+
+
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
         }
-
 
         float opac = 0f;
         bool flipflop = false;
@@ -224,24 +220,25 @@ namespace JRPG
                     flipflop = !flipflop;
                 }
             }*/
+           
+            SpriteBatch.Begin();
+            SpriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.DarkSlateGray * opac);
+            SpriteBatch.End();
 
-            spriteBatch.Begin();
-            spriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.DarkSlateGray * opac);
-            spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(renderTarget2);
 
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Immediate);
+            SpriteBatch.Begin(SpriteSortMode.Immediate);
             effect.CurrentTechnique.Passes[0].Apply();
             effect.Parameters["palette"].SetValue(palette);
             effect.Parameters["tex_width"].SetValue((float)palette.Width);
             effect.Parameters["tex_height"].SetValue((float)palette.Height);
 
-            spriteBatch.Draw((Texture2D)renderTarget1, Vector2.Zero, Color.White);
+            SpriteBatch.Draw((Texture2D)renderTarget1, Vector2.Zero, Color.White);
 
-            spriteBatch.End();
+            SpriteBatch.End();
 
             
 
@@ -253,6 +250,47 @@ namespace JRPG
 
             SpriteBatch.End();
 
+        }
+    }
+
+    public static class SpriteBatchExtensions
+    {
+        public static void DrawNineSlice(this SpriteBatch spriteBatch, Texture2D texture, Color color, Rectangle destination, Rectangle? source = null)
+        {
+            // figure out size of chunks
+            int sourceLeft = 0;
+            int sourceTop = 0;
+            int chunkWidth = 0;
+            int chunkHeight = 0;
+
+            if (!source.HasValue)
+            {
+                chunkWidth = texture.Width / 3;
+                chunkHeight = texture.Height / 3;
+            }
+            else
+            {
+                sourceTop = source.Value.Top;
+                sourceLeft = source.Value.Left;
+                chunkWidth = source.Value.Width / 3;
+                chunkHeight = source.Value.Height / 3;
+            }
+
+            // corners
+            spriteBatch.Draw(texture, new Rectangle(destination.Left, destination.Top, chunkWidth, chunkHeight), new Rectangle(sourceLeft, sourceTop, chunkWidth, chunkHeight), color);
+            spriteBatch.Draw(texture, new Rectangle(destination.Right - chunkWidth, destination.Top, chunkWidth, chunkHeight), new Rectangle(sourceLeft + (chunkWidth * 2), sourceTop, chunkWidth, chunkHeight), color);
+            spriteBatch.Draw(texture, new Rectangle(destination.Left, destination.Bottom - chunkHeight, chunkWidth, chunkHeight), new Rectangle(sourceLeft, sourceTop + (chunkHeight * 2), chunkWidth, chunkHeight), color);
+            spriteBatch.Draw(texture, new Rectangle(destination.Right - chunkWidth, destination.Bottom - chunkHeight, chunkWidth, chunkHeight), new Rectangle(sourceLeft + (chunkWidth * 2), sourceTop + (chunkHeight * 2), chunkWidth, chunkHeight), color);
+
+            // edges
+            spriteBatch.Draw(texture, new Rectangle(destination.Left + chunkWidth, destination.Top, destination.Width - (chunkWidth * 2), chunkHeight), new Rectangle(sourceLeft + chunkWidth, sourceTop, chunkWidth, chunkHeight), color);
+            spriteBatch.Draw(texture, new Rectangle(destination.Left + chunkWidth, destination.Bottom - chunkHeight, destination.Width - (chunkWidth * 2), chunkHeight), new Rectangle(sourceLeft + chunkWidth, sourceTop + (chunkHeight * 2), chunkWidth, chunkHeight), color);
+
+            spriteBatch.Draw(texture, new Rectangle(destination.Left, destination.Top + chunkHeight, chunkWidth, destination.Height - (chunkHeight * 2)), new Rectangle(sourceLeft, sourceTop + chunkHeight, chunkWidth, chunkHeight), color);
+            spriteBatch.Draw(texture, new Rectangle(destination.Right - chunkWidth, destination.Top + chunkHeight, chunkWidth, destination.Height - (chunkHeight * 2)), new Rectangle(sourceLeft + (chunkWidth * 2), sourceTop + chunkHeight, chunkWidth, chunkHeight), color);
+
+            // middle
+            spriteBatch.Draw(texture, new Rectangle(destination.Left + chunkWidth, destination.Top + chunkHeight, destination.Width - (chunkWidth * 2), destination.Height - (chunkHeight * 2)), new Rectangle(sourceLeft + chunkWidth, sourceTop + chunkHeight, chunkWidth, chunkHeight), color);
         }
     }
 }

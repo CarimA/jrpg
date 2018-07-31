@@ -25,11 +25,13 @@ namespace JRPG.Scripting.Commands
         int x = 0;
         int y = 0;
 
-        Texture2D textbox;
+        BitmapFont font;
+        Texture2D atlas;
 
         public GetTextInputCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
         {
-            textbox = Game.Content.Load<Texture2D>("interfaces/textui");
+            atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
+            font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);
         }
 
         public override object Action(params object[] args)
@@ -64,7 +66,7 @@ namespace JRPG.Scripting.Commands
             PlayerData.InControl = true;
             return input;
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             InputComponent pin = Player.GetComponent<InputComponent>();
@@ -148,7 +150,7 @@ namespace JRPG.Scripting.Commands
                     x = 9;
                 }
             }
-            
+
             if (pol == "action")
             {
                 // pos = (y * 13) + x
@@ -174,7 +176,7 @@ namespace JRPG.Scripting.Commands
                     }
                     if (x >= 9 && x <= 12)
                     {
-                        if (input.Length > 0)
+                        if (input.Length > 0 && !string.IsNullOrWhiteSpace(input))
                         {
                             held = false;
                         }
@@ -193,45 +195,87 @@ namespace JRPG.Scripting.Commands
 
         }
 
-        public override void DrawUI(GameTime gameTime)
+        private void DrawTextCentered(string text, int left, int top, int width, int height, Color color)
         {
+            Vector2 textSize = font.MeasureString(text);
+            Game.SpriteBatch.DrawString(font, text, new Vector2((int)(left + (width / 2) - (textSize.X / 2)), (int)(top + (height / 2) - (textSize.Y / 2))), color);
+        }
 
-            //Game.SpriteBatch.Draw(Game.Assets.Textures["black"], new Rectangle(0, 0, 400, 240), Color.White * 0.5f);
+        public override void DrawUI(GameTime gameTime)
+        { 
+            // reconstruct whole thing
+            Game.SpriteBatch.Draw(atlas, new Rectangle(0, 0, MainGame.GAME_WIDTH, MainGame.GAME_HEIGHT), new Rectangle(22, 0, 3, 3), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(0, 50, MainGame.GAME_WIDTH, 19), new Rectangle(46, 0, 1, 19), Color.White);
 
-            BitmapFont font = MainGame.Font;
+            Game.SpriteBatch.Draw(atlas, new Rectangle(35, 65, 314, 1), new Rectangle(22, 3, 3, 1), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(33, 68, 3, 1), new Rectangle(22, 4, 3, 1), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(MainGame.GAME_WIDTH - 36, 68, 3, 1), new Rectangle(22, 5, 3, 1), Color.White);
 
-            Game.SpriteBatch.Draw(textbox, Vector2.Zero, Color.White);
-            Game.SpriteBatch.Draw(textbox, Vector2.Zero, new Rectangle(24*5, 0, 24*5, 24), Color.White);
+            for (int i = 0; i < 5; i++)
+            {
+                Game.SpriteBatch.Draw(atlas, new Rectangle(6 * i, 71, 6, 11), new Rectangle(34, 0, 6, 11), Color.White);
+                Game.SpriteBatch.Draw(atlas, new Rectangle(MainGame.GAME_WIDTH - 6 - (6 * i), 71, 6, 11), new Rectangle(35, 0, 6, 11), Color.White);
+            }
+            Game.SpriteBatch.Draw(atlas, new Rectangle(30, 71, 6, 11), new Rectangle(40, 0, 6, 11), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(MainGame.GAME_WIDTH - 36, 71, 6, 11), new Rectangle(47, 0, 6, 11), Color.White);
 
+            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(30, 83, 324, 109), new Rectangle(34, 11, 9, 9));
+
+            Game.SpriteBatch.Draw(atlas, new Rectangle(33, 83, 3, 1), new Rectangle(22, 4, 3, 1), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(57, 191, 3, 1), new Rectangle(22, 4, 3, 1), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(MainGame.GAME_WIDTH - 36, 83, 3, 1), new Rectangle(22, 5, 3, 1), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(MainGame.GAME_WIDTH - 36, 191, 3, 1), new Rectangle(22, 5, 3, 1), Color.White);
+
+            int top = 55 + 17;
+            int gutter = 24;
+            for (int lx = 0; lx < 13; lx++)
+            {
+                for (int ly = 0; ly < 5; ly++)
+                {
+                    if (x == lx && y == ly)
+                    {
+                        Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(36 + (lx * gutter), 66 + (ly * gutter), gutter, gutter), new Rectangle(25, 0, 9, 9));
+                    } 
+                    else
+                    {
+                        Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(36 + (lx * gutter), 66 + (ly * gutter), gutter, gutter), new Rectangle(25, 9, 9, 9));
+                    }
+                }
+            };
+
+            if (y == 5 && (x >= 1 && x <= 4))
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60, 186, gutter * 4, gutter), new Rectangle(25, 0, 9, 9));
+            }
+            else
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60, 186, gutter * 4, gutter), new Rectangle(25, 9, 9, 9));
+            }
+
+            if (y == 5 && (x >= 4 && x <= 8))
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60 + (gutter * 4), 186, gutter * 4, gutter), new Rectangle(25, 0, 9, 9));
+            }
+            else
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60 + (gutter * 4), 186, gutter * 4, gutter), new Rectangle(25, 9, 9, 9));
+            }
+
+            if (y == 5 && (x >= 8 && x <= 12))
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60 + (gutter * 8), 186, gutter * 4, gutter), new Rectangle(25, 0, 9, 9));
+            }
+            else
+            {
+                Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(60 + (gutter * 8), 186, gutter * 4, gutter), new Rectangle(25, 9, 9, 9));
+            }
 
             int row = 0;
             int column = 0;
 
-            int left = 37+6;
-            int top = 55+17;
-            int gutter = 24;
-
-            int highlight_width = y == 5 ? 24 * 4 : 24;
-            int highlight_x = y == 5 ? 0 : 96;
-
-            Game.SpriteBatch.Draw(textbox, new Rectangle(left - 7 + (x * 24), top - 6 + (y * 24), highlight_width, 24), new Rectangle(highlight_x, 0, highlight_width, 24), Color.White);
-
-            Game.SpriteBatch.Draw(textbox, new Rectangle(left, top, 300, 132), new Rectangle(0, 216, 300, 132), Color.White);
-
-            /*
-            Color highlight = Color.White;
-
             foreach (char k in keys)
-            {
-                highlight = Color.Black;
-                if (row == y && column == x)
-                {
-                    highlight = Color.Yellow;
-                }
-
-                Vector2 charSize = font.MeasureString(k.ToString());
-
-                Game.SpriteBatch.DrawString(font, k.ToString(), new Vector2((int)(left + column * gutter + (charSize.X / 2)), (int)(top + row * gutter + (charSize.Y / 2))), highlight);
+            {                                
+                DrawTextCentered(k.ToString(), 36 + column * gutter, 67 + row * gutter, gutter, gutter, Color.White);
 
                 column++;
                 if (column >= 13)
@@ -241,36 +285,11 @@ namespace JRPG.Scripting.Commands
                 }
             }
 
-            highlight = Color.White;
-            if (y == 5 && (x >= 1 && x <= 4))
-            {
-                highlight = Color.Yellow;
-            }
-            //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + 8, 150), Color.White);
-            Vector2 spaceSize = font.MeasureString("SPACE");
-            Game.SpriteBatch.DrawString(font, "SPACE", new Vector2((int)(left + gutter + (spaceSize.X / 2)), (int)(top + (gutter * 5) + (spaceSize.Y / 2))), highlight);
+            DrawTextCentered("SPACE", 60, 187, gutter * 4, gutter, Color.White);
+            DrawTextCentered("DELETE", 60 + (gutter * 4), 187, gutter * 4, gutter, Color.White);
+            DrawTextCentered("CONFIRM", 60 + (gutter * 8), 187, gutter * 4, gutter, Color.White);
 
-            highlight = Color.White;
-            if (y == 5 && (x >= 5 && x <= 8))
-            {
-                highlight = Color.Yellow;
-            }
-            //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + (12 * 4) + 8, 150), Color.White);
-            Vector2 deleteSize = font.MeasureString("DELETE");
-            Game.SpriteBatch.DrawString(font, "DELETE", new Vector2((int)(left + (gutter * 4) + (deleteSize.X / 2)), (int)(top + (gutter * 5) + (deleteSize.Y / 2))), highlight);
-
-            highlight = Color.White;
-            if (y == 5 && (x >= 9 && x <= 12))
-            {
-                highlight = Color.Yellow;
-            }
-            //Game.SpriteBatch.Draw(Game.Assets.Textures["inputbigbutton"], new Vector2(122 + (12 * 8) + 8, 150), Color.White);
-            Vector2 enterSize = font.MeasureString("ENTER");
-            Game.SpriteBatch.DrawString(font, "ENTER", new Vector2((int)(left + (gutter * 8) + (enterSize.X / 2)), (int)(top + (gutter * 5) + (enterSize.Y / 2))), highlight);
-            //spriteBatch.DrawString(font, "@", new Vector2(122 + x * 12, 90 + y * 12), Color.HotPink);*/
-
-            Game.SpriteBatch.DrawString(font, title, new Vector2((int)((MainGame.GAME_WIDTH / 2) - (font.MeasureString(title).Width / 2)), top - 62), Color.Yellow);
-
+            Game.SpriteBatch.DrawString(font, title, new Vector2((int)((MainGame.GAME_WIDTH / 2) - (font.MeasureString(title).Width / 2)), top - 62), Color.Lerp(Color.Yellow, Color.Red, (float)Math.Sin(gameTime.TotalGameTime.TotalSeconds * 2f)));
             int calcX = (MainGame.GAME_WIDTH / 2) - ((length * 12) / 2);
             for (int i = 0; i < length; i++)
             {
