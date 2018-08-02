@@ -127,3 +127,20 @@
 /processorParam:TextureFormat=Color
 /build:Interfaces/Atlas.png
 
+#begin Tilesets/blockout.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Tilesets/blockout.png
+
+#begin Maps/town1.tmx
+/importer:TiledMapImporter
+/processor:TiledMapProcessor
+/build:Maps/town1.tmx
+

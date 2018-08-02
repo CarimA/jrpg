@@ -17,9 +17,13 @@ namespace JRPG.Scripting.Commands
 
         bool held = true;
 
+        int totalLines = 2;
+
         float renderSpeed = 35f;
 
         string fullText;     // full text
+
+        bool onlyOneLine;
 
         float renderTime = 0;   // time passed since last char set
         int curChar = 0;    // current char being rendered
@@ -50,35 +54,45 @@ namespace JRPG.Scripting.Commands
 
             held = true;
 
-            fullText = "";
-
-            string txt = args[0].ToString();
-            string[] tokens = txt.Split(' ');
-
-            string curLine = "";
-            foreach (string token in tokens)
+            if (font.MeasureString((string)args[0]).Width >= 270)
             {
-                if (token.Contains("\n"))
+
+
+                fullText = "";
+
+                string txt = args[0].ToString();
+                string[] tokens = txt.Split(' ');
+
+                string curLine = "";
+                foreach (string token in tokens)
                 {
+                    if (token.Contains("\n"))
+                    {
+                        curLine += token;
+                        fullText += curLine;
+                        curLine = "";
+                        continue;
+                    }
+
+                    if (font.MeasureString(curLine + token).Width >= 270)
+                    {
+                        curLine += "\n";
+                        fullText += curLine;
+                        curLine = "";
+                    }
+
                     curLine += token;
-                    fullText += curLine;
-                    curLine = "";
-                    continue;
+                    curLine += " ";
                 }
 
-                if (font.MeasureString(curLine + token).Width >= 270)
-                {
-                    curLine += "\n";
-                    fullText += curLine;
-                    curLine = "";
-                }
-
-                curLine += token;
-                curLine += " ";
+                fullText += curLine;
+                onlyOneLine = false;
             }
-            
-            fullText += curLine;
-            
+            else
+            {
+                fullText = (string)args[0];
+                onlyOneLine = true;
+            }
 
             while (held) ;
 
@@ -141,7 +155,7 @@ namespace JRPG.Scripting.Commands
                     {
                         renderTime += (1f / renderSpeed) * 6f;
                         newLinePos.Add(curChar + 1);
-                        if (newLinePos.Count() > 3)
+                        if (newLinePos.Count() > totalLines)
                         {
                             pause = true;
                         }
@@ -165,28 +179,34 @@ namespace JRPG.Scripting.Commands
             if (fullText == null || fullText == "")
                 return;
 
-            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(74, 144, 300, 62), new Rectangle(0, 0, 18, 18));
+            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(74, 148, 300, 54), new Rectangle(0, 0, 18, 18));
 
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 149, 4, 4), new Rectangle(18, 0, 4, 4), Color.White);
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 153, 4, 44), new Rectangle(18, 4, 4, 4), Color.White);
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 197, 4, 4), new Rectangle(18, 8, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 153, 4, 4), new Rectangle(18, 0, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 157, 4, 36), new Rectangle(18, 4, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 193, 4, 4), new Rectangle(18, 8, 4, 4), Color.White);
 
             // Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 300 - 10, 216 - 62 - 10, 300, 62), new Rectangle(0, 0, 300, 62), Color.White);
 
             int p = pause ? 1 : 0;
+            int y = MainGame.GAME_HEIGHT - (MainGame.GAME_HEIGHT - 206) - 46;
+            if (onlyOneLine)
+            {
+                y += 46 / 4 - 3;
+            }
+            
             Game.SpriteBatch.DrawString(font, 
                 fullText.Substring(
-                    newLinePos[Math.Max(0, newLinePos.Count() - 3 - p)], 
-                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - 3 - p)]), 
-                new Vector2(384 - 300 + 5, 216 - 62 - 1), new Color(13, 32, 48));
+                    newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)], 
+                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]), 
+                new Vector2(384 - 300 + 5, y), new Color(13, 32, 48));
 
             if (pause)
             {
-                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23, 216 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 6, 6), new Rectangle(0, 18, 6, 6), Color.White);
+                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23, 216 - 27 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 6, 6), new Rectangle(0, 18, 6, 6), Color.White);
             }
             if (finished)
             {
-                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 216 - 23, 6, 6), new Rectangle(6, 18, 6, 6), Color.White);
+                Game.SpriteBatch.Draw(atlas, new Rectangle(384 - 23 - (int)(Math.Sin(gameTime.TotalGameTime.TotalSeconds * 10) * 3), 216 - 27, 6, 6), new Rectangle(6, 18, 6, 6), Color.White);
 
             }
         }

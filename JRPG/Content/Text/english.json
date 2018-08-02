@@ -2,6 +2,7 @@
   "Main": {
 	"GameName": "PhotoVs",
     "Debug": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada et lorem non ultricies. Curabitur eget ante vitae enim elementum molestie ut a nisl.",
-    "ExampleText":  "Hello Carleed!"
+    "ExampleText":  "I can make changes pretty easily!",
+    "Debug2": "There'll be a pretty little house here soon (maybe)!"
   }
 }

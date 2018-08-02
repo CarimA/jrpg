@@ -151,6 +151,14 @@ namespace JRPG.Scripting.Commands
                 }
             }
 
+            if (pol == "cancel")
+            {
+                if (input.Length > 0)
+                {
+                    input = input.Substring(0, input.Length - 1);
+                }
+            }
+
             if (pol == "action")
             {
                 // pos = (y * 13) + x

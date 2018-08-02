@@ -1,1 +1,9 @@
-# jrpg
+# jrpg - PhotoVs
+
+Hello, if you're reading this, it means you've found my not-so-private repository for my game, PhotoVs. While I would greatly prefer it if you didn't use this source code for your own uses, I can't exactly stop you, so all I ask is that if you do take a look, please use the project for educational purposes.
+
+At some point, this repository will either stop being updated and changes will be made private or the repository itself will be made private. This is a while off. I'll provide some warning when that is about to happen.
+
+In terms of actual code quality, this project is a bit different from my usual standard; I'm first and foremost focused on results and finishing this project rather than efficiency. This means weird hacks and rushed (read: outright bad) code that sometimes isn't so maintainable, which might later get refactored/rewritten if I misjudged my requirements.
+
+In terms of features, jrpg implements an Entity Component framework and a JavaScript scripting framework  that will largely serve as the basis for the functionality of the game.

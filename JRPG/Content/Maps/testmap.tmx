@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="33" height="24" tilewidth="16" tileheight="16" infinite="0" nextobjectid="50">
  <properties>
+  <property name="_bound-east" value="town1"/>
   <property name="_bound-south" value="pocket"/>
   <property name="music" value="cave 3"/>
   <property name="name" value="Route 2"/>
@@ -220,7 +221,9 @@
   <object id="41" x="480" y="256" width="48" height="128"/>
   <object id="43" x="448" y="192" width="16" height="16">
    <properties>
+    <property name="interact" value="test"/>
     <property name="script" value="test"/>
+    <property name="walkover" value="test2"/>
    </properties>
   </object>
   <object id="44" x="48" y="0" width="48" height="48"/>

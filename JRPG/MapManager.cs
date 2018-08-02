@@ -89,14 +89,14 @@ namespace JRPG
                     Set(CurrentMap.MapSouth.ID);
                     break;
                 case Direction.Left:
-                    position.Set(CurrentMap.MapEast.MapWidth - 1, position.TileY);
+                    position.Set(CurrentMap.MapWest.MapWidth - 1, position.TileY);
                     position.SubTileX = 1;
-                    Set(CurrentMap.MapEast.ID);
+                    Set(CurrentMap.MapWest.ID);
                     break;
                 case Direction.Right:
                     position.Set(0, position.TileY);
                     position.SubTileX = -1;
-                    Set(CurrentMap.MapWest.ID);
+                    Set(CurrentMap.MapEast.ID);
                     break;
             }
         }
