@@ -193,11 +193,11 @@ namespace JRPG.Scripting.Commands
             {
                 y += 46 / 4 - 3;
             }
-            
-            Game.SpriteBatch.DrawString(font, 
+
+            Game.SpriteBatch.DrawString(font,
                 fullText.Substring(
-                    newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)], 
-                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]), 
+                    newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)],
+                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]),
                 new Vector2(384 - 300 + 5, y), new Color(13, 32, 48));
 
             if (pause)

@@ -11,6 +11,23 @@ using System.Threading.Tasks;
 
 namespace JRPG
 {
+    public class ScriptData
+    {
+        public string Script;
+    }
+
+    public class MapObject<T>
+    {
+        public int X;
+        public int Y;
+        public T Data;
+
+        public static List<MapObject<T>> Find(List<MapObject<T>> mapObjects, int X, int Y)
+        {
+            return mapObjects.FindAll(m => m.X == X && m.Y == Y);
+        }
+    }
+
     public class Map
     {
         private MapManager mapManager;
@@ -21,7 +38,9 @@ namespace JRPG
         public TiledMap MapData;
 
         public bool[,] Collision;
-        public List<string>[,] Scripts;
+
+        public List<MapObject<ScriptData>> InteractScripts;
+        public List<MapObject<ScriptData>> WalkoverScripts;
 
         public Map MapNorth;
         public Map MapSouth;
@@ -44,7 +63,8 @@ namespace JRPG
             ID = id;
             Name = GetProperty("name");
             Collision = new bool[MapWidth, MapHeight];
-            Scripts = new List<string>[MapWidth, MapHeight];
+            InteractScripts = new List<MapObject<ScriptData>>();
+            WalkoverScripts = new List<MapObject<ScriptData>>();
             LoadBoundaryData();
         }
 
@@ -75,7 +95,7 @@ namespace JRPG
 
                     }
 
-                    if (obj is TiledMapRectangleObject && obj.Properties.Where(x => x.Key == "script").Count() > 0)
+                    if (objectLayer.Name.Contains("scripts") && obj is TiledMapRectangleObject)
                     {
 
                         Vector2 pos = (obj as TiledMapRectangleObject).Position;
@@ -91,11 +111,15 @@ namespace JRPG
                         {
                             for (int y = rect.Top; y < rect.Bottom; y++)
                             {
-                                if (Scripts[x, y] == null)
+                                InteractScripts.Add(new MapObject<ScriptData>()
                                 {
-                                    Scripts[x, y] = new List<string>();
-                                }
-                                Scripts[x, y].Add(obj.Properties["script"]);
+                                    X = x,
+                                    Y = y,
+                                    Data = new ScriptData()
+                                    {
+                                        Script = obj.Name
+                                    }
+                                });
                             }
                         }
                     }
@@ -223,12 +247,9 @@ namespace JRPG
                 return;
             }
 
-            if (Scripts[x, y] != null)
+            foreach (var c in MapObject<ScriptData>.Find(InteractScripts as List<MapObject<ScriptData>>, x, y))
             {
-                foreach (var c in Scripts[x, y])
-                {
-                    mapManager.Game.ScriptingManager.RunScript(c);
-                }
+                mapManager.Game.ScriptingManager.RunScript(c.Data.Script);
             }
         }
 

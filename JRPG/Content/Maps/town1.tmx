@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="30" height="44" tilewidth="16" tileheight="16" infinite="0" nextobjectid="10">
+<map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="30" height="44" tilewidth="16" tileheight="16" infinite="0" nextobjectid="12">
  <properties>
   <property name="_bound-west" value="testmap"/>
  </properties>
@@ -55,10 +55,11 @@
 </data>
  </layer>
  <objectgroup name="collision">
-  <object id="8" x="192" y="320" width="16" height="16">
-   <properties>
-    <property name="script" value="test"/>
-   </properties>
-  </object>
+  <object id="11" x="192" y="320" width="16" height="16"/>
  </objectgroup>
+ <objectgroup name="interact-scripts">
+  <object id="10" name="test" x="192" y="320" width="16" height="16"/>
+ </objectgroup>
+ <objectgroup name="walkover-scripts"/>
+ <objectgroup name="warps"/>
 </map>

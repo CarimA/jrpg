@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.BitmapFonts;
+using MonoGame.Extended.Sprites;
+using MonoGame.Extended.TextureAtlases;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -45,7 +47,6 @@ namespace JRPG
 
         Effect effect;
         Texture2D palette;
-        Texture2D pixel;
         
         public MainGame()
         {
@@ -178,9 +179,6 @@ namespace JRPG
 
             effect = Assets.Get<Effect>(AssetManager.Asset.ShadersPalette); // Content.Load<Effect>("palette");
             palette = Assets.Get<Texture2D>(AssetManager.Asset.InterfacesColourTable); // Content.Load<Texture2D>("interfaces/proj3");
-
-            pixel = new Texture2D(GraphicsDevice, 1, 1);
-            pixel.SetData<Color>(new Color[1] { Color.White });
         }
         
         protected override void UnloadContent()
@@ -221,9 +219,6 @@ namespace JRPG
                 }
             }*/
            
-            SpriteBatch.Begin();
-            SpriteBatch.Draw(pixel, new Rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT), Color.DarkSlateGray * opac);
-            SpriteBatch.End();
 
 
             GraphicsDevice.SetRenderTarget(renderTarget2);
@@ -255,6 +250,58 @@ namespace JRPG
 
     public static class SpriteBatchExtensions
     {
+        /*public static Random rand = new Random();
+        public static void DrawString(this SpriteBatch spriteBatch, BitmapFont bitmapFont, string text, Vector2 position)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (text.Contains("\n"))
+            {
+                string[] split = text.Split('\n');
+                Vector2 measure = Vector2.Zero;
+                foreach (string s in split)
+                {
+                    spriteBatch.DrawString(bitmapFont, s, position + measure);                    
+                    measure.Y += bitmapFont.MeasureString(s).Height;
+                }
+                return;
+            }
+
+            if (!text.Contains("{"))
+            {
+                spriteBatch.DrawString(bitmapFont, text, position, Color.White);
+                return;
+            }
+
+            Vector2 offset = Vector2.Zero;
+
+            bool shake = false;
+
+            string[] tokens = text.Split('{');
+
+            foreach (string token in tokens)
+            {
+                string[] arg = token.Split('}');
+                int index = Math.Min(1, arg.Length - 1);
+
+                switch (arg[0])
+                {
+                    case "shake":
+                        shake = true;
+                        break;
+                    case "/shake":
+                        shake = false;
+                        break;
+                }
+
+                Vector2 shakeAmount = new Vector2(rand.Next(-1, 1), rand.Next(-1, 1));
+
+                spriteBatch.DrawString(bitmapFont, arg[index], position + offset + (shake ? shakeAmount : Vector2.Zero), Color.White);
+                offset.X += bitmapFont.MeasureString(arg[index]).Width;
+            }
+        }*/
+
         public static void DrawNineSlice(this SpriteBatch spriteBatch, Texture2D texture, Color color, Rectangle destination, Rectangle? source = null)
         {
             // figure out size of chunks
@@ -296,7 +343,6 @@ namespace JRPG
 }
 
 /* todo tasks
- *      asset manager
  *      sound/music play
  *      state machine
  *          state transition effects

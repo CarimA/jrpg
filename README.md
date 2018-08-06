@@ -7,3 +7,55 @@ At some point, this repository will either stop being updated and changes will b
 In terms of actual code quality, this project is a bit different from my usual standard; I'm first and foremost focused on results and finishing this project rather than efficiency. This means weird hacks and rushed (read: outright bad) code that sometimes isn't so maintainable, which might later get refactored/rewritten if I misjudged my requirements.
 
 In terms of features, jrpg implements an Entity Component framework and a JavaScript scripting framework  that will largely serve as the basis for the functionality of the game.
+
+
+
+Neutral - Unresisted by everything, does normal damage
+
+
+
+Physical
+
+
+
+Fire
+
+Water
+
+Ice
+
+Electric
+
+Wind
+
+Nature
+
+Psychokinesis
+
+Gravity
+
+Artefact
+
+
+
+Light
+
+Dark
+
+
+
+Utility
+
+Passive
+
+
+
+attack types:
+
+​	adjacent - can only attack in one square next to the user
+
+​	line - can attack in a line in any direction from the user
+
+​	area of effect - can attack a area 
+
+​	targeted - attack any spot on the map
