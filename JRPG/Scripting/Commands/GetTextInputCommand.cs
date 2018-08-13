@@ -53,7 +53,7 @@ namespace JRPG.Scripting.Commands
             }
             if (args.Count() > 1)
             {
-                length = int.Parse((string)args[1]);
+                length = int.Parse(args[1].ToString());
             }
             if (args.Count() > 2)
             {
@@ -282,7 +282,7 @@ namespace JRPG.Scripting.Commands
             int column = 0;
 
             foreach (char k in keys)
-            {                                
+            {
                 DrawTextCentered(k.ToString(), 36 + column * gutter, 67 + row * gutter, gutter, gutter, Color.White);
 
                 column++;
@@ -307,7 +307,8 @@ namespace JRPG.Scripting.Commands
                 }
                 else
                 {
-                    Game.SpriteBatch.DrawString(font, input[i].ToString(), new Vector2(calcX + (12 * i), top - 45), Color.White);
+                    int wid = (int)(font.MeasureString(input[i].ToString()).Width / 2);
+                    Game.SpriteBatch.DrawString(font, input[i].ToString(), new Vector2(calcX + (12 * i) + (4 - wid), top - 45), Color.White);
                 }
             }
         }
