@@ -44,7 +44,7 @@ namespace JRPG.EntityComponent.Components
 
                 float runSpeed = RunToggled ? 6.5f : 2.25f;
                 Vector2 walkDir = Vector2.Zero;
-
+                
                 if (input.ButtonDown("up"))
                 {
                     walkDir.Y--;

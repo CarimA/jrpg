@@ -1,6 +1,7 @@
 ﻿using JRPG.Data;
 using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
+using JRPG.GameComponents;
 using JRPG.Scripting;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -38,6 +39,7 @@ namespace JRPG
         public Camera Camera { private set; get; }
         public MapManager MapManager { private set; get; }
         public Entity Player { private set; get; }
+        public TransitionManager Transition { private set; get; }
 
         EntityManager entityManager;
 
@@ -166,6 +168,7 @@ namespace JRPG
             MapManager = new MapManager(this, Player);
 
             ScriptingManager = new ScriptingManager(this);
+            Transition = new TransitionManager(this);
 
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
             renderTarget2 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
@@ -341,18 +344,3 @@ namespace JRPG
         }
     }
 }
-
-/* todo tasks
- *      sound/music play
- *      state machine
- *          state transition effects
- *          loading support
- *          screens
- *              title screen
- *              main menu
- *                  create/use/delete save
- *                  options
- *              game
- *                  
- *      
- */
