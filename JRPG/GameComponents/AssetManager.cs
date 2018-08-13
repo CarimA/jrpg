@@ -36,7 +36,8 @@ namespace JRPG
             TextEnglish,
             TilesetsNewTileset,
             TilesetsPocketTileset,
-            ShadersPalette
+            ShadersPalette,
+            PortraitDebug
         }
 
         public static AssetManager LoadAll(Game game, ContentManager content)
@@ -63,6 +64,9 @@ namespace JRPG
             // Content/Tilesets
             am.Add<Texture2D>(Asset.TilesetsNewTileset, "Tilesets/new-tileset");
             am.Add<Texture2D>(Asset.TilesetsPocketTileset, "Tilesets/pocket-tileset");
+
+            // Content/Portraits
+            am.Add<Texture2D>(Asset.PortraitDebug, "Portraits/debug");
 
             // Content
             am.Add<Effect>(Asset.ShadersPalette, "palette");

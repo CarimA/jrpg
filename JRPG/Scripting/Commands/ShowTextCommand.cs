@@ -31,6 +31,7 @@ namespace JRPG.Scripting.Commands
         bool pause = false;
         bool finished = false;
 
+        Texture2D portrait;
         Texture2D atlas;
         BitmapFont font;
         
@@ -38,6 +39,7 @@ namespace JRPG.Scripting.Commands
         {
             atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
             font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);
+            portrait = Game.Assets.Get<Texture2D>(AssetManager.Asset.PortraitDebug);
         }
 
         public override object Action(params object[] args)
@@ -54,7 +56,7 @@ namespace JRPG.Scripting.Commands
 
             held = true;
 
-            if (font.MeasureString((string)args[0]).Width >= 270)
+            if (font.MeasureString((string)args[0]).Width >= 290)
             {
 
 
@@ -74,7 +76,7 @@ namespace JRPG.Scripting.Commands
                         continue;
                     }
 
-                    if (font.MeasureString(curLine + token).Width >= 270)
+                    if (font.MeasureString(curLine + token).Width >= 290)
                     {
                         curLine += "\n";
                         fullText += curLine;
@@ -179,11 +181,14 @@ namespace JRPG.Scripting.Commands
             if (fullText == null || fullText == "")
                 return;
 
-            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(74, 148, 300, 54), new Rectangle(0, 0, 18, 18));
+            Game.SpriteBatch.DrawNineSlice(atlas, Color.White, new Rectangle(10, 148, 364, 54), new Rectangle(0, 0, 18, 18));
 
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 153, 4, 4), new Rectangle(18, 0, 4, 4), Color.White);
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 157, 4, 36), new Rectangle(18, 4, 4, 4), Color.White);
-            Game.SpriteBatch.Draw(atlas, new Rectangle(81, 193, 4, 4), new Rectangle(18, 8, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(61, 153, 4, 4), new Rectangle(18, 0, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(61, 157, 4, 36), new Rectangle(18, 4, 4, 4), Color.White);
+            Game.SpriteBatch.Draw(atlas, new Rectangle(61, 193, 4, 4), new Rectangle(18, 8, 4, 4), Color.White);
+
+            Game.SpriteBatch.Draw(portrait, new Rectangle(15, 153, 44, 44), new Rectangle(0, 0, 44, 44), Color.White);
+            Game.SpriteBatch.Draw(portrait, new Rectangle(15, 153, 44, 44), new Rectangle(44 * 2, 44, 44, 44), Color.White);
 
             // Game.SpriteBatch.Draw(textbox, new Rectangle(384 - 300 - 10, 216 - 62 - 10, 300, 62), new Rectangle(0, 0, 300, 62), Color.White);
 
@@ -198,7 +203,7 @@ namespace JRPG.Scripting.Commands
                 fullText.Substring(
                     newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)],
                     curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]),
-                new Vector2(384 - 300 + 5, y), new Color(13, 32, 48));
+                new Vector2(384 - 300 + 5 - 20, y), new Color(13, 32, 48));
 
             if (pause)
             {
