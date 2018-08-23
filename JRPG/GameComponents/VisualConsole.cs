@@ -11,8 +11,21 @@ using System.Threading.Tasks;
 
 namespace JRPG.GameComponents
 {
+    public struct ConsoleLine
+    {
+        public string Text;
+        public Color ForegroundColor;
+        public Color BackgroundColor;
+
+        public void Draw()
+        {
+
+        }
+    }
+
     public class VisualConsole : TextWriter
     {
+        // todo: change to array with colour info
         public readonly IndexedQueue<string> Text;
 
         public readonly MainGame Game;
@@ -27,6 +40,7 @@ namespace JRPG.GameComponents
         string input = "";
 
         BitmapFont ds;
+        // todo: change to monospaced font
         Texture2D _pixel;
 
         Keys[] keys;
@@ -111,6 +125,8 @@ namespace JRPG.GameComponents
             }
         }
 
+        // todo: change to use pgup/pgdown and/or scrollwheel
+        // todo: home to top, end to bottom
         public void MoveCursorUp() => MoveCursor(-1);
         public void MoveCursorDown() => MoveCursor(1);
 
@@ -182,6 +198,7 @@ namespace JRPG.GameComponents
                 {
                     try
                     {
+                        // todo: display input in console
                         Game.ScriptingManager.Execute(input);
                     }
                     catch (Exception e)
