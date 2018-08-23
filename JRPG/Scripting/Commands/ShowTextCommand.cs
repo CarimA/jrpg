@@ -199,11 +199,16 @@ namespace JRPG.Scripting.Commands
                 y += 46 / 4 - 3;
             }
 
-            Game.SpriteBatch.DrawString(font,
-                fullText.Substring(
+            string text = fullText.Substring(
                     newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)],
-                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]),
-                new Vector2(384 - 300 + 5 - 20, y), new Color(13, 32, 48));
+                    curChar - newLinePos[Math.Max(0, newLinePos.Count() - totalLines - p)]);
+
+            Game.SpriteBatch.DrawString(font, text, new Vector2(384 - 300 + 5 - 20 - 1, y), Color.Black);
+            Game.SpriteBatch.DrawString(font, text, new Vector2(384 - 300 + 5 - 20 + 1, y), Color.Black);
+            Game.SpriteBatch.DrawString(font, text, new Vector2(384 - 300 + 5 - 20, y - 1), Color.Black);
+            Game.SpriteBatch.DrawString(font, text, new Vector2(384 - 300 + 5 - 20, y + 1), Color.Black);
+
+            Game.SpriteBatch.DrawString(font, text, new Vector2(384 - 300 + 5 - 20, y), Color.White);
 
             if (pause)
             {

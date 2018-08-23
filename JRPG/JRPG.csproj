@@ -59,7 +59,9 @@
     <Compile Include="EntityComponent\Entity.cs" />
     <Compile Include="EntityComponent\EntityList.cs" />
     <Compile Include="EntityComponent\EntityManager.cs" />
+    <Compile Include="GameComponents\IndexedQueue.cs" />
     <Compile Include="GameComponents\TransitionManager.cs" />
+    <Compile Include="GameComponents\VisualConsole.cs" />
     <Compile Include="MainGame.cs" />
     <Compile Include="GameComponents\Map.cs" />
     <Compile Include="GameComponents\MapManager.cs" />

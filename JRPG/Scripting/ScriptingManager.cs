@@ -82,7 +82,7 @@ namespace JRPG.Scripting
             new GetTextInputCommand(this, engine);
         }
 
-        private void Execute(string script)
+        public void Execute(string script)
         {
             engine = new Engine();
             engine.Execute("'use strict';");

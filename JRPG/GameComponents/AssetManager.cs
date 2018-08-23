@@ -28,6 +28,7 @@ namespace JRPG
         public enum Asset
         {
             DebugPlayer = 0,
+            FontDebug,
             Font,
             InterfacesColourTable,
             InterfacesControls,
@@ -48,10 +49,11 @@ namespace JRPG
             am.Add<Texture2D>(Asset.DebugPlayer, "Debug/Player");
 
             // Content/Fonts
+            am.Add<BitmapFont>(Asset.FontDebug, "Fonts/DS");
             am.Add<BitmapFont>(Asset.Font, "Fonts/Pixellari");
 
             // Content/Interfaces
-            am.Add<Texture2D>(Asset.InterfacesColourTable, "Interfaces/ColourTable");
+            am.Add<Texture2D>(Asset.InterfacesColourTable, "Interfaces/bestpal_grid");
             am.Add<Texture2D>(Asset.InterfacesControls, "Interfaces/Controls");
             am.Add<Texture2D>(Asset.InterfacesAtlas, "Interfaces/Atlas");
 
@@ -62,8 +64,8 @@ namespace JRPG
             am.Add<string>(Asset.TextEnglish, "Text/English");
 
             // Content/Tilesets
-            am.Add<Texture2D>(Asset.TilesetsNewTileset, "Tilesets/new-tileset");
-            am.Add<Texture2D>(Asset.TilesetsPocketTileset, "Tilesets/pocket-tileset");
+            //am.Add<Texture2D>(Asset.TilesetsNewTileset, "Tilesets/new-tileset");
+            //am.Add<Texture2D>(Asset.TilesetsPocketTileset, "Tilesets/pocket-tileset");
 
             // Content/Portraits
             am.Add<Texture2D>(Asset.PortraitDebug, "Portraits/debug");

@@ -47,7 +47,9 @@ namespace JRPG
             foreach (string map in maps)
             {
                 string id = Path.GetFileNameWithoutExtension(map);
-                Map m = new Map(this, Game.Content.Load<TiledMap>(directory + "/" + id), id);
+                // IF THERE'S AN ERROR HERE ABOUT ID ALREADY FOUND, YOU HAVE TWO LAYERS WITH THE SAME NAME
+                var t = Game.Content.Load<TiledMap>(directory + "/" + id);
+                Map m = new Map(this, t, id);
                 Maps.Add(m);
 
                 // generate a buffer of each map
@@ -123,7 +125,7 @@ namespace JRPG
                 TmxRenderer = new TiledMapRenderer(Game.GraphicsDevice);
                 LoadMaps("content/maps");
 
-                Set("pocket");
+                Set("town1");
                 init = true;
             }
 

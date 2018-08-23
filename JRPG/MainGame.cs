@@ -23,6 +23,8 @@ namespace JRPG
 {
     public class MainGame : Game
     {
+        public VisualConsole Console;
+
         public AssetManager Assets;
 
         public const int GAME_WIDTH = 384;
@@ -52,6 +54,7 @@ namespace JRPG
         
         public MainGame()
         {
+            Console = new VisualConsole(this);
             Graphics = new GraphicsDeviceManager(this);
 
             Content.RootDirectory = "Content";
@@ -70,8 +73,29 @@ namespace JRPG
 
         }
 
-        public void SaveScreenshot(bool openURL = true)
+        public enum ClipboardContents
         {
+            URL = 0,
+            Image
+        }
+
+        public void SaveScreenshot(ClipboardContents clipboard = ClipboardContents.URL, bool openURL = true)
+        {
+            int shotNumber = 0;
+            Directory.CreateDirectory("Screenshots");
+            string path = Path.Combine(Application.StartupPath, "Screenshots", "photovs_screenshot_" + shotNumber.ToString().PadLeft(3, '0') + ".png");
+            while (File.Exists(path))
+            {
+                shotNumber++;
+                path = Path.Combine(Application.StartupPath, "Screenshots", "photovs_screenshot_" + shotNumber.ToString().PadLeft(3, '0') + ".png");
+            }
+
+            using (FileStream fs = new FileStream(path, FileMode.Create))
+            {
+                Console.WriteLine("Copied to clipboard and saved screenshot to ", path);
+                renderTarget2.SaveAsPng(fs, GAME_WIDTH, GAME_HEIGHT);
+            }
+
             using (MemoryStream mem = new MemoryStream())
             {
                 // save game screenshot to memory
@@ -99,7 +123,16 @@ namespace JRPG
                         foreach (var d in data)
                         {
                             var val = d.Element("link").Value;
-                            Clipboard.SetText(val);
+
+                            if (clipboard == ClipboardContents.Image)
+                            {
+                                Clipboard.SetImage(System.Drawing.Image.FromFile(path));
+                            }
+                            else
+                            {
+                                Clipboard.SetText(val);
+                            }
+
                             Console.WriteLine($"Screenshot uploaded to {val}");
 
                             if (openURL)
@@ -173,6 +206,8 @@ namespace JRPG
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
             renderTarget2 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
 
+            Console.Initialise();
+
             base.Initialize();
         }
 
@@ -194,6 +229,7 @@ namespace JRPG
         protected override void Update(GameTime gameTime)
         {
             base.Update(gameTime);
+            Console.Update();
         }
 
         float opac = 0f;
@@ -245,6 +281,7 @@ namespace JRPG
             SpriteBatch.Begin(samplerState: SamplerState.PointWrap);
 
             SpriteBatch.Draw((Texture2D)renderTarget2, dest, Color.White);
+            Console.Draw();
 
             SpriteBatch.End();
 

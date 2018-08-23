@@ -30,9 +30,23 @@ namespace JRPG.EntityComponent.Components
                 Game.Graphics.ApplyChanges();
             }
 
+            if (input.ButtonPressed("debug"))
+            {
+                Game.Console.ToggleVisible();
+            }
+
             if (input.ButtonPressed("screenshot"))
             {
                 Game.SaveScreenshot();
+            }
+
+            if (input.ButtonPressed("up"))
+            {
+                Game.Console.MoveCursorUp();
+            }
+            if (input.ButtonPressed("down"))
+            {
+                Game.Console.MoveCursorDown();
             }
 
             if (InControl)
@@ -113,7 +127,7 @@ namespace JRPG.EntityComponent.Components
         {
             PositionComponent position = this.GetComponent<PositionComponent>();
             TextureComponent texture = GetComponent<TextureComponent>();
-            Game.SpriteBatch.Draw(texture.Texture, position.GetPosition() - new Vector2(MainGame.TILE_SIZE / 2, (MainGame.TILE_SIZE / 2) + 16), Color.White);
+            Game.SpriteBatch.Draw(texture.Texture, position.GetPosition() - new Vector2((MainGame.TILE_SIZE / 2) + 8, (MainGame.TILE_SIZE / 2) + 16 + 8 + 6), Color.White);
         }
 
         public override void DrawUI(GameTime gameTime)

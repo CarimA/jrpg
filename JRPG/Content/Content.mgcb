@@ -27,11 +27,6 @@
 /processorParam:TextureFormat=Color
 /build:Debug/player.png
 
-#begin Maps/pocket.tmx
-/importer:TiledMapImporter
-/processor:TiledMapProcessor
-/build:Maps/pocket.tmx
-
 #begin Maps/testmap.tmx
 /importer:TiledMapImporter
 /processor:TiledMapProcessor
@@ -48,18 +43,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Tilesets/new-tileset.png
-
-#begin Tilesets/pocket-tileset.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Tilesets/pocket-tileset.png
 
 #begin Fonts/pixellari.fnt
 /importer:BitmapFontImporter
@@ -155,4 +138,33 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Portraits/debug.png
+
+#begin Interfaces/bestpal_grid.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Interfaces/bestpal_grid.png
+
+#begin Fonts/ds.fnt
+/importer:BitmapFontImporter
+/processor:BitmapFontProcessor
+/build:Fonts/ds.fnt
+
+#begin Fonts/ds_0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Fonts/ds_0.png
 

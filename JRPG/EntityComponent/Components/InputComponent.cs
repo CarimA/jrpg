@@ -21,6 +21,7 @@ namespace JRPG.EntityComponent.Components
             new Tuple<string, List<Buttons>, List<Keys>>("cancel", new List<Buttons>() { Buttons.B }, new List<Keys>() { Keys.X }),
             new Tuple<string, List<Buttons>, List<Keys>>("run", new List<Buttons>() { Buttons.B }, new List<Keys>() { Keys.X }),
             new Tuple<string, List<Buttons>, List<Keys>>("fullscreen", new List<Buttons>() { }, new List<Keys>() { Keys.F1 }),
+            new Tuple<string, List<Buttons>, List<Keys>>("debug", new List<Buttons>() { }, new List<Keys>() { Keys.F12 }),
             new Tuple<string, List<Buttons>, List<Keys>>("screenshot", new List<Buttons>() { Buttons.Back }, new List<Keys>() { Keys.F2 }),
         };
 
