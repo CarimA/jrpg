@@ -17,16 +17,31 @@ namespace JRPG.GameComponents
         public Color ForegroundColor;
         public Color BackgroundColor;
 
-        public void Draw()
+        public void Draw(SpriteBatch spriteBatch, Texture2D bg, BitmapFont font, int index)
         {
+            spriteBatch.Draw(bg, new Rectangle(23, 23 + (16 * index), 604, 16), BackgroundColor * 0.5f);
+            spriteBatch.DrawString(font, Text, new Vector2(25, 23 + 16 * index), ForegroundColor);
+        }
 
+        public ConsoleLine(string text)
+        {
+            Text = text;
+            ForegroundColor = Color.White;
+            BackgroundColor = Color.Black;
+        }
+
+        public ConsoleLine(string text, Color foregroundColor, Color backgroundColor)
+        {
+            Text = text;
+            ForegroundColor = foregroundColor;
+            BackgroundColor = backgroundColor;
         }
     }
 
     public class VisualConsole : TextWriter
     {
         // todo: change to array with colour info
-        public readonly IndexedQueue<string> Text;
+        public readonly IndexedQueue<ConsoleLine> Text;
 
         public readonly MainGame Game;
         public override Encoding Encoding => Encoding.ASCII;
@@ -51,7 +66,7 @@ namespace JRPG.GameComponents
         public VisualConsole(MainGame game)
         {
             Game = game;
-            Text = new IndexedQueue<string>(maxLines);
+            Text = new IndexedQueue<ConsoleLine>(maxLines);
             Console.SetOut(this);
 
 
@@ -91,15 +106,35 @@ namespace JRPG.GameComponents
             WriteLine(value);
         }
 
-        public override void WriteLine(string value)
+        public void AddLine(string value, Color fg, Color bg)
         {
-            Text.Enqueue(value);
+            Text.Enqueue(new ConsoleLine(value, fg, bg));
             cursor = Math.Max(0, Text.Count - displayLineTotal);
 
             if (Text.Count > maxLines)
             {
                 Text.Dequeue();
             }
+        }
+
+        public override void WriteLine(string value)
+        {
+            AddLine(value, Color.White, Color.Black);
+        }
+
+        public void WriteWarning(string value)
+        {
+            AddLine(value, Color.Yellow, Color.Black);
+        }
+
+        public void WriteError(string value)
+        {
+            AddLine(value, Color.Red, Color.Black);
+        }
+
+        public void WriteSuccess(string value)
+        {
+            AddLine(value, Color.LimeGreen, Color.Black);
         }
 
         public void ToggleVisible()
@@ -196,6 +231,7 @@ namespace JRPG.GameComponents
             {
                 if (input != "")
                 {
+                    WriteSuccess(" >> " + input);
                     try
                     {
                         // todo: display input in console
@@ -203,7 +239,7 @@ namespace JRPG.GameComponents
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(e.Message);
+                        WriteError(e.Message);
                     }
                     input = "";
                 }
@@ -215,7 +251,6 @@ namespace JRPG.GameComponents
             if (!Visible)
                 return;
 
-            Game.SpriteBatch.Draw(_pixel, new Rectangle(23, 23, 604, 14 * displayLineTotal + 22), Color.Black * 0.5f);
 
             //float scrollbar = Math.Min(224, 224 * ((displayLineTotal * 14) / (float)(Text.Count * 14)));
             // todo: fix when I care
@@ -225,10 +260,11 @@ namespace JRPG.GameComponents
             int i = 0;
             for (int ic = Math.Max(0, cursor); ic < Math.Min(Text.Count, cursor + displayLineTotal); ic++)
             {
-                Game.SpriteBatch.DrawString(ds, Text[ic], new Vector2(25, 25 + 14 * i), Color.White);
+                Text[ic].Draw(Game.SpriteBatch, _pixel, ds, i);
                 i++;
             }
-            Game.SpriteBatch.DrawString(ds, " >> " + input, new Vector2(25, 29 + 14 * displayLineTotal), Color.LimeGreen);
+            Game.SpriteBatch.Draw(_pixel, new Rectangle(23, 29 + (16 * displayLineTotal), 604, 16), Color.Black * 0.5f);
+            Game.SpriteBatch.DrawString(ds, " >> " + input, new Vector2(25, 29 + 16 * displayLineTotal), Color.LimeGreen);
         }
     }
 }

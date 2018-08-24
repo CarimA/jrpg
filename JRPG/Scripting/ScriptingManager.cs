@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace JRPG.Scripting
 {
+    // todo: overhaul. please.
     public class ScriptingManager : GameComponent
     {
         public new MainGame Game => (MainGame)base.Game;
 
-        private Engine engine;
 
         private List<Command> activeCommands;
         public Dictionary<string, string> Scripts;
@@ -84,9 +84,6 @@ namespace JRPG.Scripting
 
         public void Execute(string script)
         {
-            engine = new Engine();
-            engine.Execute("'use strict';");
-
             LoadCommands();
 
             Task.Factory.StartNew(() =>

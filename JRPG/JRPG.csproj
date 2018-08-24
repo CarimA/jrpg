@@ -60,6 +60,7 @@
     <Compile Include="EntityComponent\EntityList.cs" />
     <Compile Include="EntityComponent\EntityManager.cs" />
     <Compile Include="GameComponents\IndexedQueue.cs" />
+    <Compile Include="GameComponents\ScriptingManager.cs" />
     <Compile Include="GameComponents\TransitionManager.cs" />
     <Compile Include="GameComponents\VisualConsole.cs" />
     <Compile Include="MainGame.cs" />
