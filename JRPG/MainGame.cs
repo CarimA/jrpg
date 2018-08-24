@@ -18,6 +18,8 @@ using System.Net;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace JRPG
 {
@@ -45,7 +47,7 @@ namespace JRPG
 
         EntityManager entityManager;
 
-        public ScriptingManager ScriptingManager { private set; get; }
+        public Scripting.ScriptingManager ScriptingManager { private set; get; }
 
         public DataTree EnglishText;
 
@@ -79,7 +81,7 @@ namespace JRPG
             Image
         }
 
-        public void SaveScreenshot(ClipboardContents clipboard = ClipboardContents.URL, bool openURL = true)
+        public async void SaveScreenshot(ClipboardContents clipboard = ClipboardContents.URL, bool openURL = false)
         {
             int shotNumber = 0;
             Directory.CreateDirectory("Screenshots");
@@ -134,6 +136,15 @@ namespace JRPG
                             }
 
                             Console.WriteLine($"Screenshot uploaded to {val}");
+
+                            // send to discord
+                            using (WebClient client = new WebClient())
+                            {
+                                HttpResponseMessage resp = await new HttpClient().PostAsync("https://discordapp.com/api/webhooks/482641656361910272/ZKZfPujN8SfUBznuwqLUu_HJ2o-58ws_r5Whd3bcOalT2woGmjMTYAbwK7zuqFXY0rIl",
+                                    new StringContent("{\"embeds\":[{\"image\":{\"url\":\"" + val + "\"}}]}", Encoding.UTF8, "application/json"));
+                                //Console.WriteLine(resp.ToString());
+                                Console.WriteLine("Screenshot posted in PhotoVs Discord");
+                            }
 
                             if (openURL)
                             {
@@ -200,7 +211,7 @@ namespace JRPG
             Camera.SetTarget(Player);
             MapManager = new MapManager(this, Player);
 
-            ScriptingManager = new ScriptingManager(this);
+            ScriptingManager = new Scripting.ScriptingManager(this);
             Transition = new TransitionManager(this);
 
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);

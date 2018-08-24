@@ -18,6 +18,7 @@ namespace JRPG.Scripting
     {
         public new MainGame Game => (MainGame)base.Game;
 
+        Engine engine;
 
         private List<Command> activeCommands;
         public Dictionary<string, string> Scripts;
@@ -25,7 +26,7 @@ namespace JRPG.Scripting
         public ScriptingManager(MainGame game) : base(game)
         {
             game.Components.Add(this);
-
+            engine = new Engine();
             Scripts = new Dictionary<string, string>();
             activeCommands = new List<Command>();
 

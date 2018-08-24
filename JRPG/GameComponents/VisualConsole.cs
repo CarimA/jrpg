@@ -108,6 +108,15 @@ namespace JRPG.GameComponents
 
         public void AddLine(string value, Color fg, Color bg)
         {
+            if (value.Contains(Environment.NewLine))
+            {
+                foreach (var line in value.Split(new[] { Environment.NewLine }, StringSplitOptions.None))
+                {
+                    AddLine(line, fg, bg);
+                }
+                return;
+            }
+
             Text.Enqueue(new ConsoleLine(value, fg, bg));
             cursor = Math.Max(0, Text.Count - displayLineTotal);
 

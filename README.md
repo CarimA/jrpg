@@ -1,5 +1,9 @@
 # jrpg - PhotoVs
 
+Come join the [Discord](https://discord.gg/ew2X8Sy)!
+
+[GitHub](https://github.com/CarimA/jrpg) [Twitter](https://twitter.com/PhotoVsGame) [Tumblr](https://photovsgame.tumblr.com/) [Trello](https://trello.com/b/NFmeyZkw/photovs)
+
 Hello, if you're reading this, it means you've found my not-so-private repository for my game, PhotoVs. While I would greatly prefer it if you didn't use this source code for your own uses, I can't exactly stop you, so all I ask is that if you do take a look, please use the project for educational purposes.
 
 At some point, this repository will either stop being updated and changes will be made private or the repository itself will be made private. This is a while off. I'll provide some warning when that is about to happen.
