@@ -66,10 +66,7 @@ namespace JRPG.EntityComponent
             {
                 e.DrawMask(gameTime);
             });
-
-            // draw event mask
-            Game.ScriptingManager.DrawMask(gameTime);
-
+            
             // draw map fringe
             Game.MapManager.DrawFringe(Game.SpriteBatch);
 
@@ -78,10 +75,7 @@ namespace JRPG.EntityComponent
             {
                 e.DrawFringe(gameTime);
             });
-
-            // draw event fringe
-            Game.ScriptingManager.DrawFringe(gameTime);
-
+            
             Game.SpriteBatch.End();
 
             // remove camera and draw UI
@@ -91,9 +85,7 @@ namespace JRPG.EntityComponent
             {
                 e.DrawUI(gameTime);
             });
-
-            Game.ScriptingManager.DrawUI(gameTime);
-
+            
             Game.SpriteBatch.End();
         }
     }

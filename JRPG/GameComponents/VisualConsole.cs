@@ -108,6 +108,27 @@ namespace JRPG.GameComponents
 
         public void AddLine(string value, Color fg, Color bg)
         {
+            if (ds != null)
+            {
+                char[] tokens = value.ToCharArray();
+                string curLine = "";
+                string fullText = "";
+                foreach (char token in tokens)
+                {
+                    if (ds.MeasureString(curLine + token).Width >= 600)
+                    {
+                        curLine += Environment.NewLine;
+                        fullText += curLine;
+                        curLine = "";
+                    }
+
+                    curLine += token;
+                }
+
+                fullText += curLine;
+                value = fullText;
+            }
+
             if (value.Contains(Environment.NewLine))
             {
                 foreach (var line in value.Split(new[] { Environment.NewLine }, StringSplitOptions.None))

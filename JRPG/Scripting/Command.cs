@@ -12,31 +12,25 @@ namespace JRPG.Scripting
 {
     public abstract class Command
     {
-        private ScriptingManager scriptingManager;
-        public Entity Player => scriptingManager.Game.Player;
+        public MainGame Game;
+        public Entity Player;
         public PlayerComponent PlayerData;
-        public MainGame Game => scriptingManager.Game;
 
         public abstract string Name { get; }
 
-        public Command(ScriptingManager manager, Engine engine)
+        public Command(Engine engine)
         {
-            scriptingManager = manager;
-            PlayerData = Player.GetComponent<PlayerComponent>();
             engine.SetValue(Name, new Func<object[], object>(Action));
         }
 
         public void SetCommand()
         {
-            scriptingManager.AddActiveCommand(this);
-            Player.GetComponent<InputComponent>().FlushPresses();
 
             Console.WriteLine("Started command: " + this.GetType());
         }
 
         public void ClearCommand()
         {
-            scriptingManager.RemoveActiveCommand(this);
 
             Console.WriteLine("Stopped command: " + this.GetType());
         }

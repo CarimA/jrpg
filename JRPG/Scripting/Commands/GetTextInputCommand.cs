@@ -28,10 +28,8 @@ namespace JRPG.Scripting.Commands
         BitmapFont font;
         Texture2D atlas;
 
-        public GetTextInputCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
+        public GetTextInputCommand(Engine engine) : base(engine)
         {
-            atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
-            font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);
         }
 
         public override object Action(params object[] args)

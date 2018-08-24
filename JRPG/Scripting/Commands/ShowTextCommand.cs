@@ -35,7 +35,7 @@ namespace JRPG.Scripting.Commands
         Texture2D atlas;
         BitmapFont font;
         
-        public ShowTextCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
+        public ShowTextCommand(Engine engine) : base(engine)
         {
             atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
             font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);

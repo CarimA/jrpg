@@ -15,7 +15,7 @@ namespace JRPG.Scripting.Commands
         private float time;
         private bool held = true;
         
-        public WaitCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
+        public WaitCommand(Engine engine) : base(engine)
         {
 
         }

@@ -249,7 +249,8 @@ namespace JRPG
 
             foreach (var c in MapObject<ScriptData>.Find(InteractScripts as List<MapObject<ScriptData>>, x, y))
             {
-                mapManager.Game.ScriptingManager.RunScript(c.Data.Script);
+                // todo
+                //mapManager.Game.ScriptingManager.RunScript(c.Data.Script);
             }
         }
 

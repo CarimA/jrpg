@@ -15,7 +15,7 @@ namespace JRPG.Scripting.Commands
 
         bool held;
 
-        public PlayerControlCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
+        public PlayerControlCommand(Engine engine) : base(engine)
         {
 
         }
@@ -23,7 +23,6 @@ namespace JRPG.Scripting.Commands
         public override object Action(params object[] args)
         {
             bool arg = bool.Parse(args[0].ToString());
-            Player.GetComponent<PlayerComponent>().InControl = arg;
             return null;
         }
 

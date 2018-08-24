@@ -47,7 +47,7 @@ namespace JRPG
 
         EntityManager entityManager;
 
-        public Scripting.ScriptingManager ScriptingManager { private set; get; }
+        public ScriptingManager ScriptingManager { private set; get; }
 
         public DataTree EnglishText;
 
@@ -190,6 +190,8 @@ namespace JRPG
 
         protected override void Initialize()
         {
+            Console.Initialise();
+
             Graphics.PreferredBackBufferWidth = GAME_WIDTH * 3;
             Graphics.PreferredBackBufferHeight = GAME_HEIGHT * 3;
             Graphics.ApplyChanges();
@@ -211,13 +213,11 @@ namespace JRPG
             Camera.SetTarget(Player);
             MapManager = new MapManager(this, Player);
 
-            ScriptingManager = new Scripting.ScriptingManager(this);
+            ScriptingManager = new ScriptingManager(this);
             Transition = new TransitionManager(this);
 
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
             renderTarget2 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
-
-            Console.Initialise();
 
             base.Initialize();
         }

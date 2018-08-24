@@ -14,7 +14,7 @@ namespace JRPG.Scripting.Commands
 
         bool held;
 
-        public EmptyCommand(ScriptingManager manager, Engine engine) : base(manager, engine)
+        public EmptyCommand(Engine engine) : base(engine)
         {
 
         }
