@@ -1,11 +1,15 @@
 ﻿using Jint;
+using Jint.Native;
 using Jint.Runtime;
+using Jint.Runtime.Debugger;
+using Jint.Runtime.Interop;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,6 +24,7 @@ namespace JRPG.GameComponents
 
         private Engine _engine;
 
+        public List<IEnumerator> _nextToAddCoroutines;
         public List<IEnumerator> _currentCoroutines;
         public List<IEnumerator> _nextCoroutines;
 
@@ -27,17 +32,21 @@ namespace JRPG.GameComponents
         {
             game.Components.Add(this);
 
+            _nextToAddCoroutines = new List<IEnumerator>();
             _currentCoroutines = new List<IEnumerator>();
             _nextCoroutines = new List<IEnumerator>();
 
             LoadEngine();
             LoadScripts("content/scripts");
         }
-
+        
         private void LoadEngine()
         {
             // create a new jint instance
-            _engine = new Engine();
+            _engine = new Engine(new Action<Options>((options) =>
+            {
+                options.DebugMode();
+            }));
             _engine.Execute("'use strict';");
 
             _engine.SetValue("print", new Action<string>(Console.WriteLine));
@@ -46,6 +55,11 @@ namespace JRPG.GameComponents
             _engine.SetValue("print_success", new Action<string>(Game.Console.WriteSuccess));
             _engine.SetValue("text", Game.EnglishText);
 
+            //_engine.SetValue("wait", new Func<float, IEnumerator>(StartCoroutine(WaitTest)));
+            //_engine.SetValue("wait", new Action<float>(async (float input) => {
+            //    await StartCoroutine(WaitTest(input));
+            //}));
+            
             /*
              * new WaitCommand(this, engine);
             new ShowTextCommand(this, engine);
@@ -94,11 +108,12 @@ namespace JRPG.GameComponents
             }
         }
 
-        public void Execute(string script)
+        public JsValue Execute(string script)
         {
             try
             {
                 _engine.Execute(script);
+                return _engine.GetCompletionValue();
             }
             catch (JavaScriptException e)
             {
@@ -112,8 +127,48 @@ namespace JRPG.GameComponents
             }
         }
 
+        private void StartCoroutine(IEnumerator source)
+        {
+            _currentCoroutines.Add(source);
+            source.MoveNext();
+            /*var result = Task.Run(() =>
+            {
+                while (source.Current == null) ;
+                Console.WriteLine("done");
+            });*/
+
+            /*while (!result.MoveNext())
+            {
+                yield return null;
+            }*/
+        }
+
+        public StepMode WaitTest2(float seconds)
+        {
+            return StepMode.None;
+        }
+        
+        public IEnumerator WaitTest(float seconds)
+        {
+            float waitTime = seconds;
+            while (true)
+            {
+                waitTime -= deltaTime;
+                if (waitTime <= 0f)
+                {
+                    yield break;
+                }
+                else
+                {
+                    yield return null;
+                }
+            }
+        }
+
+        float deltaTime;
         public override void Update(GameTime gameTime)
         {
+            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             foreach (IEnumerator coroutine in _currentCoroutines)
             {
                 if (!coroutine.MoveNext())
@@ -129,7 +184,10 @@ namespace JRPG.GameComponents
                     continue;
                 }
             }
-            _currentCoroutines = _nextCoroutines;
+            _currentCoroutines = _nextCoroutines.ToList();
+            _nextCoroutines.Clear();
+            _currentCoroutines.AddRange(_nextToAddCoroutines);
+
             base.Update(gameTime);
         }
     }

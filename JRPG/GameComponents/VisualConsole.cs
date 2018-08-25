@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Jint.Native;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.BitmapFonts;
@@ -68,8 +69,6 @@ namespace JRPG.GameComponents
             Game = game;
             Text = new IndexedQueue<ConsoleLine>(maxLines);
             Console.SetOut(this);
-
-
 
             // todo: figure out a good input handler
             keys = new Keys[42];
@@ -220,7 +219,7 @@ namespace JRPG.GameComponents
                         {
                             if (state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift))
                                 input += SC[i - 2];//if shift is down, and a number is pressed, using the special key
-                            else input += key.ToString()[0];
+                            else input += key.ToString()[1];
                         }
                         if (i > 11 && i < 38)
                         {
@@ -265,7 +264,8 @@ namespace JRPG.GameComponents
                     try
                     {
                         // todo: display input in console
-                        Game.ScriptingManager.Execute(input);
+                        JsValue val = Game.ScriptingManager.Execute(input);
+                        Console.WriteLine(" << " + val);
                     }
                     catch (Exception e)
                     {
