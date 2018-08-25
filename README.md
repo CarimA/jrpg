@@ -1,3 +1,5 @@
+[![TODO board](https://imdone.io/api/1.0/projects/5b8147adc5b0232d32772a2b/badge)](https://imdone.io/app#/board/CarimA/jrpg)
+
 # jrpg - PhotoVs
 
 Come join the [Discord](https://discord.gg/ew2X8Sy)!
