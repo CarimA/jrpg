@@ -3,6 +3,7 @@ using Jint.Native;
 using Jint.Runtime;
 using Jint.Runtime.Debugger;
 using Jint.Runtime.Interop;
+using JRPG.EntityComponent.Components;
 using JRPG.GameComponents.ScriptCommands;
 using Microsoft.Xna.Framework;
 using System;
@@ -52,6 +53,8 @@ namespace JRPG.GameComponents
 
             // set accessible functions
             _engine.SetValue("Console", Game.Console);
+            _engine.SetValue("warp_to_map", new Action<string, int, int>(WarpToMap));
+            _engine.SetValue("warp_to", new Action<int, int>(WarpTo));
 
             // set accessible types
             _engine.SetValue("Color", TypeReference.CreateTypeReference(_engine, typeof(Color)));
@@ -59,9 +62,21 @@ namespace JRPG.GameComponents
 
             // set accessible (global) variables
             _engine.SetValue("text", Game.EnglishText);
-            
-            // set custom commands
+
+            // set custom "async" commands
             new WaitCommand(this, _engine);
+        }
+
+        private void WarpToMap(string map, int x, int y)
+        {
+            Game.MapManager.Set(map);
+            var pos = Game.Player.GetComponent<PositionComponent>();
+            pos.Set(x, y);
+        }
+        private void WarpTo(int x, int y)
+        {
+            var pos = Game.Player.GetComponent<PositionComponent>();
+            pos.Set(x, y);
         }
 
         private void LoadScripts(string directory)

@@ -48,6 +48,8 @@ namespace JRPG.GameComponents
         public override Encoding Encoding => Encoding.ASCII;
 
         public bool Visible = true;
+        private string _cursor = "|";
+        private float _cursorTimer = 0.2f;
 
         int maxLines = 100;
         int displayLineTotal = 16;
@@ -206,6 +208,13 @@ namespace JRPG.GameComponents
             if (!Visible)
                 return;
 
+            _cursorTimer -= CoroutineManager.DeltaTime;
+            if (_cursorTimer <= 0f)
+            {
+                _cursorTimer = 0.2f;
+                _cursor = _cursor == "|" ? "" : "|";
+            }
+
             KeyboardState state = Keyboard.GetState();
             int i = 0;
 
@@ -309,7 +318,7 @@ namespace JRPG.GameComponents
                 i++;
             }
             Game.SpriteBatch.Draw(_pixel, new Rectangle(23, 29 + (16 * displayLineTotal), 604, 16), Color.Black * 0.5f);
-            Game.SpriteBatch.DrawString(ds, " >> " + input, new Vector2(25, 29 + 16 * displayLineTotal), Color.LimeGreen);
+            Game.SpriteBatch.DrawString(ds, " >> " + input + _cursor, new Vector2(25, 29 + 16 * displayLineTotal), Color.LimeGreen);
         }
     }
 }
