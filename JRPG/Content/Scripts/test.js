@@ -5,9 +5,9 @@
     show_text(text.Get('Main').Get('Debug').GetString());
 }
 
-print("hi");
+Console.WriteLine("hi");
 wait(5);
-print("oo");
+Console.WriteLine("oo");
 
 /* get_text_input @title @max_length @default_input
  * 

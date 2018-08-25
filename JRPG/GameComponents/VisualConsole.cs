@@ -71,7 +71,7 @@ namespace JRPG.GameComponents
             Console.SetOut(this);
 
             // todo: figure out a good input handler
-            keys = new Keys[42];
+            keys = new Keys[43];
             Keys[] tempkeys;
             tempkeys = Enum.GetValues(typeof(Keys)).Cast<Keys>().ToArray<Keys>();
             int j = 0;
@@ -87,6 +87,7 @@ namespace JRPG.GameComponents
             keys[39] = Keys.OemMinus;
             keys[40] = Keys.OemPlus;
             keys[41] = Keys.OemComma;
+            keys[42] = Keys.OemSemicolon;
             IskeyUp = new bool[keys.Length]; //boolean for each key to make the user have to release the key before adding to the string
             for (int i = 0; i < keys.Length; i++)
                 IskeyUp[i] = true;
@@ -199,6 +200,7 @@ namespace JRPG.GameComponents
             
         }
 
+        KeyboardState lastState;
         public void Update()
         {
             if (!Visible)
@@ -249,6 +251,13 @@ namespace JRPG.GameComponents
                         {
                             input += ",";
                         }
+                        if (i == 42)
+                        {
+                            if (state.IsKeyDown(Keys.RightShift) || state.IsKeyDown(Keys.LeftShift))
+                                input += ":";
+                            else
+                                input += ";";
+                        }
                     }
                     IskeyUp[i] = false; //make sure we know the key is pressed
                 }
@@ -256,23 +265,29 @@ namespace JRPG.GameComponents
                 i++;
             }
 
-            if (state.IsKeyDown(Keys.Enter))
+            if (state.IsKeyDown(Keys.Enter) && lastState.IsKeyUp(Keys.Enter))
             {
-                if (input != "")
+                Submit();
+            }
+            lastState = state;
+        }
+
+        public async void Submit()
+        {
+            if (input != "")
+            {
+                //WriteSuccess(" >> " + input);
+                try
                 {
-                    WriteSuccess(" >> " + input);
-                    try
-                    {
-                        // todo: display input in console
-                        JsValue val = Game.ScriptingManager.Execute(input);
-                        Console.WriteLine(" << " + val);
-                    }
-                    catch (Exception e)
-                    {
-                        WriteError(e.Message);
-                    }
-                    input = "";
+                    // todo: display input in console
+                    JsValue val = await Game.ScriptingManager.Execute(input);
+                    WriteSuccess(" << " + input + " << " + val);
                 }
+                catch (Exception e)
+                {
+                    WriteError(e.Message);
+                }
+                input = "";
             }
         }
 

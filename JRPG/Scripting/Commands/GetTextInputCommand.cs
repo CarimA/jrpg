@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Jint;
 using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,11 +26,7 @@ namespace JRPG.Scripting.Commands
 
         BitmapFont font;
         Texture2D atlas;
-
-        public GetTextInputCommand(Engine engine) : base(engine)
-        {
-        }
-
+        
         public override object Action(params object[] args)
         {
             SetCommand();

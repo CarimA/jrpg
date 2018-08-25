@@ -1,5 +1,4 @@
-﻿using Jint;
-using JRPG.EntityComponent;
+﻿using JRPG.EntityComponent;
 using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using System;
@@ -17,12 +16,7 @@ namespace JRPG.Scripting
         public PlayerComponent PlayerData;
 
         public abstract string Name { get; }
-
-        public Command(Engine engine)
-        {
-            engine.SetValue(Name, new Func<object[], object>(Action));
-        }
-
+       
         public void SetCommand()
         {
 

@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections;
 
 namespace JRPG
 {
@@ -191,6 +192,7 @@ namespace JRPG
         protected override void Initialize()
         {
             Console.Initialise();
+            CoroutineManager.Initialise();
 
             Graphics.PreferredBackBufferWidth = GAME_WIDTH * 3;
             Graphics.PreferredBackBufferHeight = GAME_HEIGHT * 3;
@@ -219,7 +221,25 @@ namespace JRPG
             renderTarget1 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
             renderTarget2 = new RenderTarget2D(this.GraphicsDevice, GAME_WIDTH, GAME_HEIGHT);
 
+            //IEnumerator t = Test();
+            //CoroutineManager.StartCoroutine(t);
+
             base.Initialize();
+        }
+
+        float time = 1f;
+        IEnumerator Test()
+        {
+            while(true)
+            {
+                time -= CoroutineManager.DeltaTime;
+                if (time <= 0f)
+                {
+                    time = 1f;
+                    Console.WriteLine("tick");
+                }
+                yield return null;
+            }
         }
 
         protected override void LoadContent()
@@ -241,6 +261,7 @@ namespace JRPG
         {
             base.Update(gameTime);
             Console.Update();
+            CoroutineManager.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
         }
 
         float opac = 0f;

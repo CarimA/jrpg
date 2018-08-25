@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Jint;
 using Microsoft.Xna.Framework;
 
 namespace JRPG.Scripting.Commands
@@ -13,11 +12,6 @@ namespace JRPG.Scripting.Commands
         public override string Name => "null";
 
         bool held;
-
-        public EmptyCommand(Engine engine) : base(engine)
-        {
-
-        }
 
         public override object Action(params object[] args)
         {

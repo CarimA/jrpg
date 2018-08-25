@@ -3,6 +3,7 @@ using Jint.Native;
 using Jint.Runtime;
 using Jint.Runtime.Debugger;
 using Jint.Runtime.Interop;
+using JRPG.GameComponents.ScriptCommands;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections;
@@ -11,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace JRPG.GameComponents
@@ -21,52 +23,45 @@ namespace JRPG.GameComponents
     public class ScriptingManager : GameComponent
     {
         public new MainGame Game => (MainGame)base.Game;
-
+        
         private Engine _engine;
 
-        public List<IEnumerator> _nextToAddCoroutines;
-        public List<IEnumerator> _currentCoroutines;
-        public List<IEnumerator> _nextCoroutines;
+        private readonly List<Command> _subscriptions;
+        private readonly List<Command> _subscriptionsToAdd;
+        private readonly List<Command> _subscriptionsToRemove;
+
 
         public ScriptingManager(Game game) : base(game)
         {
             game.Components.Add(this);
 
-            _nextToAddCoroutines = new List<IEnumerator>();
-            _currentCoroutines = new List<IEnumerator>();
-            _nextCoroutines = new List<IEnumerator>();
+            _subscriptions = new List<Command>();
+            _subscriptionsToAdd = new List<Command>();
+            _subscriptionsToRemove = new List<Command>();
 
             LoadEngine();
             LoadScripts("content/scripts");
         }
-        
+
         private void LoadEngine()
         {
             // create a new jint instance
-            _engine = new Engine(new Action<Options>((options) =>
-            {
-                options.DebugMode();
-            }));
+            _engine = new Engine();
+
             _engine.Execute("'use strict';");
 
-            _engine.SetValue("print", new Action<string>(Console.WriteLine));
-            _engine.SetValue("print_error", new Action<string>(Game.Console.WriteError));
-            _engine.SetValue("print_warning", new Action<string>(Game.Console.WriteWarning));
-            _engine.SetValue("print_success", new Action<string>(Game.Console.WriteSuccess));
-            _engine.SetValue("text", Game.EnglishText);
+            // set accessible functions
+            _engine.SetValue("Console", Game.Console);
 
-            //_engine.SetValue("wait", new Func<float, IEnumerator>(StartCoroutine(WaitTest)));
-            //_engine.SetValue("wait", new Action<float>(async (float input) => {
-            //    await StartCoroutine(WaitTest(input));
-            //}));
+            // set accessible types
+            _engine.SetValue("Color", TypeReference.CreateTypeReference(_engine, typeof(Color)));
+            _engine.SetValue("Vector2", TypeReference.CreateTypeReference(_engine, typeof(Vector2)));
+
+            // set accessible (global) variables
+            _engine.SetValue("text", Game.EnglishText);
             
-            /*
-             * new WaitCommand(this, engine);
-            new ShowTextCommand(this, engine);
-            new PlayerControlCommand(this, engine);
-            new GetTextInputCommand(this, engine);
-            
-             */
+            // set custom commands
+            new WaitCommand(this, _engine);
         }
 
         private void LoadScripts(string directory)
@@ -93,14 +88,14 @@ namespace JRPG.GameComponents
             LoadScript(e.FullPath);
         }
 
-        private void LoadScript(string file)
+        private async void LoadScript(string file)
         {
             Console.WriteLine("Loading script: " + file);
             string script = File.ReadAllText(file);
 
             try
             {
-                Execute(script);
+                await Execute(script);
             }
             catch (ApplicationException e)
             {
@@ -108,87 +103,58 @@ namespace JRPG.GameComponents
             }
         }
 
-        public JsValue Execute(string script)
+        public Task<JsValue> Execute(string script)
         {
-            try
+            return Task.Factory.StartNew(() =>
             {
-                _engine.Execute(script);
-                return _engine.GetCompletionValue();
-            }
-            catch (JavaScriptException e)
-            {
-                var location = _engine.GetLastSyntaxNode().Location.Start;
-                throw new ApplicationException(
-                  String.Format("{0} (Line {1}, Column {2})",
-                    e.Error,
-                    location.Line,
-                    location.Column
-                    ), e);
-            }
-        }
-
-        private void StartCoroutine(IEnumerator source)
-        {
-            _currentCoroutines.Add(source);
-            source.MoveNext();
-            /*var result = Task.Run(() =>
-            {
-                while (source.Current == null) ;
-                Console.WriteLine("done");
-            });*/
-
-            /*while (!result.MoveNext())
-            {
-                yield return null;
-            }*/
-        }
-
-        public StepMode WaitTest2(float seconds)
-        {
-            return StepMode.None;
-        }
-        
-        public IEnumerator WaitTest(float seconds)
-        {
-            float waitTime = seconds;
-            while (true)
-            {
-                waitTime -= deltaTime;
-                if (waitTime <= 0f)
+                try
                 {
-                    yield break;
+                    _engine.Execute(script);
+                    return _engine.GetCompletionValue();
                 }
-                else
+                catch (JavaScriptException e)
                 {
-                    yield return null;
+                    var location = _engine.GetLastSyntaxNode().Location.Start;
+                    throw new ApplicationException(
+                      String.Format("{0} (Line {1}, Column {2})",
+                        e.Error,
+                        location.Line,
+                        location.Column
+                        ), e);
                 }
-            }
+            });
         }
 
-        float deltaTime;
         public override void Update(GameTime gameTime)
         {
-            deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            foreach (IEnumerator coroutine in _currentCoroutines)
-            {
-                if (!coroutine.MoveNext())
-                {
-                    // this coroutine has finished.
-                    continue;
-                }
-
-                if (coroutine.Current == null)
-                {
-                    // the coroutine yielded null, so run it next frame.
-                    _nextCoroutines.Add(coroutine);
-                    continue;
-                }
-            }
-            _currentCoroutines = _nextCoroutines.ToList();
-            _nextCoroutines.Clear();
-            _currentCoroutines.AddRange(_nextToAddCoroutines);
-
             base.Update(gameTime);
+
+            if (_subscriptionsToAdd.Count() > 0)
+            {
+                _subscriptions.AddRange(_subscriptionsToAdd);
+                _subscriptionsToAdd.Clear();
+            }
+            if (_subscriptionsToRemove.Count() > 0)
+            {
+                foreach (var com in _subscriptionsToRemove)
+                    _subscriptions.Remove(com);
+                _subscriptionsToRemove.Clear();
+            }
+
+            foreach (var subscriptions in _subscriptions)
+            {
+                subscriptions.Update(gameTime);
+            }
+        }
+
+        public void Subscribe(Command update)
+        {
+            _subscriptionsToAdd.Add(update);
+        }
+
+        public void Unsubscribe(Command update)
+        {
+            _subscriptionsToRemove.Add(update);
         }
     }
 }

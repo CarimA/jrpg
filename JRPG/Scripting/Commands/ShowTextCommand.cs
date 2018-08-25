@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Jint;
 using JRPG.EntityComponent.Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -35,7 +34,7 @@ namespace JRPG.Scripting.Commands
         Texture2D atlas;
         BitmapFont font;
         
-        public ShowTextCommand(Engine engine) : base(engine)
+        public ShowTextCommand() : base()
         {
             atlas = Game.Assets.Get<Texture2D>(AssetManager.Asset.InterfacesAtlas);
             font = Game.Assets.Get<BitmapFont>(AssetManager.Asset.Font);
