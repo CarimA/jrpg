@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace JRPG.GameComponents
 {
-    public struct ConsoleLine
+    public class ConsoleLine
     {
         public string Text;
         public Color ForegroundColor;
@@ -104,8 +104,8 @@ namespace JRPG.GameComponents
 
         public override void Write(string value)
         {
-            // todo: figure out an actual write implementation
-            WriteLine(value);
+            ConsoleLine c = Text[Text.Count - 1];
+            c.Text += value;
         }
 
         public void AddLine(string value, Color fg, Color bg)
@@ -218,7 +218,7 @@ namespace JRPG.GameComponents
             KeyboardState state = Keyboard.GetState();
             int i = 0;
 
-            foreach (Keys key in keys)
+            /*foreach (Keys key in keys)
             {
                 if (state.IsKeyDown(key))
                 {
@@ -272,10 +272,13 @@ namespace JRPG.GameComponents
                 }
                 else if (state.IsKeyUp(key)) IskeyUp[i] = true;
                 i++;
-            }
+            }*/
+
+            input = Game.KeyInput.GetInput();
 
             if (state.IsKeyDown(Keys.Enter) && lastState.IsKeyUp(Keys.Enter))
             {
+                Game.KeyInput.Flush();
                 Submit();
             }
             lastState = state;

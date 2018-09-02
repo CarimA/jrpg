@@ -56,7 +56,7 @@ namespace JRPG.EntityComponent.Components
                     RunToggled = !RunToggled;
                 }
 
-                float runSpeed = RunToggled ? 6.5f : 2.25f;
+                float runSpeed = RunToggled ? 65f : 120f;
                 Vector2 walkDir = Vector2.Zero;
                 
                 if (input.ButtonDown("up"))
@@ -76,7 +76,9 @@ namespace JRPG.EntityComponent.Components
                     walkDir.X++;
                 }
 
-                if (walkDir.X < 0)
+                position.Move(walkDir, runSpeed);
+
+                /*if (walkDir.X < 0)
                 {
                     position.Move(PositionComponent.Direction.Left, runSpeed);
                 }
@@ -91,13 +93,14 @@ namespace JRPG.EntityComponent.Components
                 else if (walkDir.Y > 0)
                 {
                     position.Move(PositionComponent.Direction.Down, runSpeed);
-                }
+                }*/
                 
                 if (position.MovementDirection == Direction.None)
                 {
                     if (input.ButtonPressed("action"))
                     {
-                        Direction direction = position.FacingDirection;
+                        throw new NotImplementedException();
+                        /*Direction direction = position.FacingDirection;
                         switch (direction)
                         {
                             case Direction.Right:
@@ -112,7 +115,7 @@ namespace JRPG.EntityComponent.Components
                             case Direction.Down:
                                 Game.MapManager.CurrentMap.Interact(position.TileX, position.TileY + 1);
                                 break;
-                        }
+                        }*/
                     }
                 }
             }
@@ -127,7 +130,7 @@ namespace JRPG.EntityComponent.Components
         {
             PositionComponent position = this.GetComponent<PositionComponent>();
             TextureComponent texture = GetComponent<TextureComponent>();
-            Game.SpriteBatch.Draw(texture.Texture, position.GetPosition() - new Vector2((MainGame.TILE_SIZE / 2) + 8, (MainGame.TILE_SIZE / 2) + 16 + 8 + 6), Color.White);
+            Game.SpriteBatch.Draw(texture.Texture, position.Position - new Vector2((MainGame.TILE_SIZE / 2) + 8, (MainGame.TILE_SIZE / 2) + 16 + 8 + 6), Color.White);
         }
 
         public override void DrawUI(GameTime gameTime)

@@ -70,7 +70,7 @@ namespace JRPG
         { 
             if (target != null)
             {
-                Translate = target.GetComponent<PositionComponent>().GetPosition();
+                Translate = target.GetComponent<PositionComponent>().Position;
             }
 
             UpdateView();

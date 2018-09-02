@@ -81,24 +81,36 @@ namespace JRPG
             switch (direction)
             {
                 case Direction.Up:
-                    position.Set(position.TileX, CurrentMap.MapNorth.MapHeight - 1);
-                    position.SubTileY = 1;
-                    Set(CurrentMap.MapNorth.ID);
+                    if (CurrentMap.MapNorth != null)
+                    {
+                        position.Set(position.Position.X, CurrentMap.MapNorth.PixelHeight - 1);
+                        //position.SubTileY = 1;
+                        Set(CurrentMap.MapNorth.ID);
+                    }
                     break;
                 case Direction.Down:
-                    position.Set(position.TileX, 0);
-                    position.SubTileY = -1;
-                    Set(CurrentMap.MapSouth.ID);
+                    if (CurrentMap.MapSouth != null)
+                    {
+                        position.Set(position.Position.X, 0);
+                        //position.SubTileY = -1;
+                        Set(CurrentMap.MapSouth.ID);
+                    }
                     break;
                 case Direction.Left:
-                    position.Set(CurrentMap.MapWest.MapWidth - 1, position.TileY);
-                    position.SubTileX = 1;
-                    Set(CurrentMap.MapWest.ID);
+                    if (CurrentMap.MapWest != null)
+                    {
+                        position.Set(CurrentMap.MapWest.PixelWidth - 1, position.Position.Y);
+                        //position.SubTileX = 1;
+                        Set(CurrentMap.MapWest.ID);
+                    }
                     break;
                 case Direction.Right:
-                    position.Set(0, position.TileY);
-                    position.SubTileX = -1;
-                    Set(CurrentMap.MapEast.ID);
+                    if (CurrentMap.MapEast != null)
+                    {
+                        position.Set(0, position.Position.Y);
+                        //position.SubTileX = -1;
+                        Set(CurrentMap.MapEast.ID);
+                    }
                     break;
             }
         }

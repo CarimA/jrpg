@@ -25,32 +25,61 @@ namespace JRPG.EntityComponent.Components
             CurrentlyMoving
         }
 
-        public int TileX { get; set; }
-        public int TileY { get; set; }
-        public float SubTileX { get; set; } // ranges from 0 to 1 or 0 to -1, updates over time
-        public float SubTileY { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 Velocity { get; set; }
+
+        //public int TileX { get; set; }
+        //public int TileY { get; set; }
+        //public float SubTileX { get; set; } // ranges from 0 to 1 or 0 to -1, updates over time
+        //public float SubTileY { get; set; }
         public Direction MovementDirection { get; set; }
         public Direction FacingDirection { get; set; }
 
         public float MoveSpeed;
+        
+        //{
+            //return new Vector2(
+            //    (TileX * MainGame.TILE_SIZE) + (SubTileX * MainGame.TILE_SIZE) + (MainGame.TILE_SIZE / 2),
+            //    (TileY * MainGame.TILE_SIZE) + (SubTileY * MainGame.TILE_SIZE) + (MainGame.TILE_SIZE / 2)
+            //);
+        //}
 
-        public Vector2 GetPosition()
+        public void Set(float x, float y)
         {
-            return new Vector2(
-                (TileX * MainGame.TILE_SIZE) + (SubTileX * MainGame.TILE_SIZE) + (MainGame.TILE_SIZE / 2),
-                (TileY * MainGame.TILE_SIZE) + (SubTileY * MainGame.TILE_SIZE) + (MainGame.TILE_SIZE / 2)
-            );
+            Position = new Vector2(x, y);
+            //TileX = x;
+            //TileY = y;
+            //SubTileX = 0;
+            //SubTileY = 0;
         }
 
-        public void Set(int x, int y)
+        public void Move(Vector2 direction, float moveSpeed = 60f)
         {
-            TileX = x;
-            TileY = y;
-            SubTileX = 0;
-            SubTileY = 0;
+            Velocity = direction * moveSpeed;
+
+            if (Game.MapManager.Player == GetOwner && Velocity != Vector2.Zero)
+            {
+                if (Position.Y < 0)
+                {
+                    Game.MapManager.Move(Direction.Up);
+                }
+                if (Position.X < 0)
+                {
+                    Game.MapManager.Move(Direction.Left);
+                }
+                if (Position.Y >= Game.MapManager.CurrentMap.PixelHeight)
+                {
+                    Game.MapManager.Move(Direction.Down);
+                }
+                if (Position.X >= Game.MapManager.CurrentMap.PixelWidth)
+                {
+                    Game.MapManager.Move(Direction.Right);
+                }
+                Game.Window.Title = $"{Game.MapManager.CurrentMap.ID} - {{{Position}}}";
+            }
         }
 
-        public MovementFailureReason Move(Direction direction, float moveSpeed = 2.25f)
+        /*public MovementFailureReason Move(Direction direction, float moveSpeed = 2.25f)
         {
             // move somewhere, return if we can't move yet or if we collide with something
             if (MovementDirection != Direction.None)
@@ -127,11 +156,11 @@ namespace JRPG.EntityComponent.Components
             }
 
             return MovementFailureReason.None;
-        }
+        }*/
         
         public override void Update(GameTime gameTime)
         {
-            if (MovementDirection == Direction.None)
+            /*if (MovementDirection == Direction.None)
             {
                 // just...wait?
             }
@@ -172,7 +201,7 @@ namespace JRPG.EntityComponent.Components
                         }
                         break;
                 }
-            }
+            }*/
         }
     }
 }

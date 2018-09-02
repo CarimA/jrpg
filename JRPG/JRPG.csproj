@@ -47,6 +47,7 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="EntityComponent\Components\CollisionComponent.cs" />
     <Compile Include="GameComponents\AssetManager.cs" />
     <Compile Include="GameComponents\Camera.cs" />
     <Compile Include="Data\SaveData.cs" />
@@ -65,6 +66,7 @@
     <Compile Include="GameComponents\ScriptCommands\Command.cs" />
     <Compile Include="GameComponents\ScriptCommands\WaitCommand.cs" />
     <Compile Include="GameComponents\ScriptingManager.cs" />
+    <Compile Include="GameComponents\TextInput.cs" />
     <Compile Include="GameComponents\TransitionManager.cs" />
     <Compile Include="GameComponents\VisualConsole.cs" />
     <Compile Include="MainGame.cs" />
@@ -122,6 +124,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="GameComponents\Screens\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Resolve\Resolve.csproj">
+      <Project>{91d478b0-e290-4fe7-b467-639f7fbb0a74}</Project>
+      <Name>Resolve</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

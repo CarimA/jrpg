@@ -52,6 +52,10 @@ namespace JRPG.GameComponents
             {
                 return array[(start + index) % array.Length];
             }
+            set
+            {
+                array[(start + index) % array.Length] = value;
+            }
         }
     }
 }

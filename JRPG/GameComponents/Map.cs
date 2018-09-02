@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Tiled;
 using MonoGame.Extended.Tiled.Graphics;
+using Resolve;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,9 +37,7 @@ namespace JRPG
         public string Name;
 
         public TiledMap MapData;
-
-        public bool[,] Collision;
-
+        
         public List<MapObject<ScriptData>> InteractScripts;
         public List<MapObject<ScriptData>> WalkoverScripts;
 
@@ -49,6 +48,8 @@ namespace JRPG
 
         public Texture2D Mask;
         public Texture2D Fringe;
+
+        public Quadtree<Polygon> World;
 
         public int PixelHeight => MapData.HeightInPixels;
         public int PixelWidth => MapData.WidthInPixels;
@@ -62,9 +63,11 @@ namespace JRPG
             MapData = map;
             ID = id;
             Name = GetProperty("name");
-            Collision = new bool[MapWidth, MapHeight];
             InteractScripts = new List<MapObject<ScriptData>>();
             WalkoverScripts = new List<MapObject<ScriptData>>();
+
+            World = new Quadtree<Polygon>(new Resolve.RectangleF(0, 0, PixelWidth, PixelHeight));
+
             LoadBoundaryData();
         }
 
@@ -76,23 +79,23 @@ namespace JRPG
                 {
                     if (objectLayer.Name.Contains("collision") && obj is TiledMapRectangleObject)
                     {
-                        Vector2 pos = (obj as TiledMapRectangleObject).Position;
-                        Size2 size = (obj as TiledMapRectangleObject).Size;
-
-                        Rectangle rect = new Rectangle(
-                            (int)(pos.X / MapData.TileWidth),
-                            (int)(pos.Y / MapData.TileHeight),
-                            (int)(size.Width / MapData.TileWidth),
-                            (int)(size.Height / MapData.TileHeight));
-
-                        for (int x = rect.Left; x < rect.Right; x++)
+                        if (obj is TiledMapPolygonObject)
                         {
-                            for (int y = rect.Top; y < rect.Bottom; y++)
-                            {
-                                Collision[x, y] = true;
-                            }
-                        }
+                            Point2[] points = (obj as TiledMapPolygonObject).Points;
 
+                            List<Vector2> newPoints = points.Select(point => new Vector2(point.X, point.Y)).ToList();
+                            World.Insert(new Polygon(obj.Position, newPoints));
+                        }
+                        else if (obj is TiledMapRectangleObject)
+                        {
+                            TiledMapRectangleObject rect = obj as TiledMapRectangleObject;
+                            Polygon p = ShapePrimitives.Rectangle(obj.Position, (obj as TiledMapRectangleObject).Size.Width, (obj as TiledMapRectangleObject).Size.Height);
+                            World.Insert(p);
+                        }
+                        else
+                        {
+                            throw new Exception("uhh something's missing :>");
+                        }
                     }
 
                     if (objectLayer.Name.Contains("scripts") && obj is TiledMapRectangleObject)
@@ -252,49 +255,6 @@ namespace JRPG
                 // todo
                 //mapManager.Game.ScriptingManager.RunScript(c.Data.Script);
             }
-        }
-
-        public bool SolidAt(int x, int y)
-        {
-            // if it's out of bounds, find the according map and try to place it there
-            // if it's still out of bounds or a map doesn't exist there, just return true
-
-            if (x < 0)
-            {
-                return MapWest == null ? true : MapWest.SolidAt(MapWest.MapWidth + x - 1, y);
-            }
-            if (x >= MapWidth)
-            {
-                return MapEast == null ? true : MapEast.SolidAt(MapWidth - x, y);
-            }
-            if (y < 0)
-            {
-                return MapNorth == null ? true : MapNorth.SolidAt(x, MapNorth.MapHeight + y - 1);
-            }
-            if (y >= MapHeight)
-            {
-                return MapSouth == null ? true : MapSouth.SolidAt(x, MapHeight - y);
-            }
-            
-
-            return Collision[x, y]; 
-
-            /*
-            return MapData.TileLayers.All((layer) =>
-            {
-                TiledMapTile? tile;
-                if (layer.TryGetTile(x, y,, out tile))
-                {
-                    if (tile.HasValue)
-                    {
-                        // todo: go through tile properties and find if "c" is set
-                        tile.Value
-                        MapData.Tilesets[0].
-                    }
-                }
-
-                
-            }*/
         }
     }
 }

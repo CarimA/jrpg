@@ -45,6 +45,7 @@ namespace JRPG
         public MapManager MapManager { private set; get; }
         public Entity Player { private set; get; }
         public TransitionManager Transition { private set; get; }
+        public TextInput KeyInput { private set; get; }
 
         EntityManager entityManager;
 
@@ -201,13 +202,16 @@ namespace JRPG
 
             entityManager = new EntityManager(this);
 
+            KeyInput = new TextInput(this);
+
             Player = new Entity(entityManager, "player");
             Player.AddComponents(new List<Component>()
             {
                 new InputComponent(),
                 new PositionComponent(),
                 new TextureComponent("Debug/player"),
-                new PlayerComponent()
+                new PlayerComponent(),
+                new CollisionComponent(new Resolve.RectangleF(-6, -20, 12, 24))
             });
             entityManager.AddEntity(Player);
 

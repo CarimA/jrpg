@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JRPG", "JRPG\JRPG.csproj", "{C4F06880-46A6-4923-B18F-13753C86A858}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resolve", "Resolve\Resolve.csproj", "{91D478B0-E290-4FE7-B467-639F7FBB0A74}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,14 @@ Global
 		{C4F06880-46A6-4923-B18F-13753C86A858}.Release|Any CPU.ActiveCfg = Release|x86
 		{C4F06880-46A6-4923-B18F-13753C86A858}.Release|x86.ActiveCfg = Release|x86
 		{C4F06880-46A6-4923-B18F-13753C86A858}.Release|x86.Build.0 = Release|x86
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Debug|x86.Build.0 = Debug|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Release|x86.ActiveCfg = Release|Any CPU
+		{91D478B0-E290-4FE7-B467-639F7FBB0A74}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
