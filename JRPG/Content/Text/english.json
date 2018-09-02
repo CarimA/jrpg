@@ -1,8 +1,10 @@
 ﻿{
   "Main": {
-	"GameName": "PhotoVs",
-    "Debug": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed malesuada et lorem non ultricies. Curabitur eget ante vitae enim elementum molestie ut a nisl.",
-    "ExampleText":  "I can make changes pretty easily!",
-    "Debug2": "There'll be a pretty little house here soon (maybe)!"
+    "GameName": "PhotoVs",
+    "PressStart": "PRESS ANY BUTTON TO START",
+    "NewGame": "New Game"
+  },
+  "Misc": {
+    "SignCannotRead": "You try to read the sign...but you cannot see it from this direction!"
   }
 }

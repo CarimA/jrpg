@@ -2,6 +2,7 @@
 <map version="1.0" tiledversion="1.1.2" orientation="orthogonal" renderorder="right-down" width="31" height="44" tilewidth="16" tileheight="16" infinite="0" nextobjectid="12">
  <properties>
   <property name="_bound-west" value="testmap"/>
+  <property name="music" value="key"/>
  </properties>
  <tileset firstgid="1" name="blockout" tilewidth="16" tileheight="16" tilecount="64" columns="8">
   <image source="../tilesets/blockout.png" width="128" height="128"/>

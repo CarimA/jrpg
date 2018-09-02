@@ -3,7 +3,7 @@
 
 /outputDir:bin/$(Platform)
 /intermediateDir:obj/$(Platform)
-/platform:Windows
+/platform:DesktopGL
 /config:
 /profile:HiDef
 /compress:False
@@ -167,4 +167,10 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Fonts/ds_0.png
+
+#begin Audio/main1.ogg
+/copy:Audio/main1.ogg
+
+#begin Audio/key.ogg
+/copy:Audio/key.ogg
 

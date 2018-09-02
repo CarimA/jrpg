@@ -76,6 +76,11 @@ namespace JRPG.EntityComponent.Components
                     walkDir.X++;
                 }
 
+                if (walkDir != Vector2.Zero)
+                {
+                    walkDir.Normalize();
+                }
+
                 position.Move(walkDir, runSpeed);
 
                 /*if (walkDir.X < 0)

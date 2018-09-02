@@ -26,6 +26,7 @@ namespace JRPG
 {
     public class MainGame : Game
     {
+        // todo: fix this ugly god object mess of a class
         public VisualConsole Console;
 
         public AssetManager Assets;
@@ -46,6 +47,7 @@ namespace JRPG
         public Entity Player { private set; get; }
         public TransitionManager Transition { private set; get; }
         public TextInput KeyInput { private set; get; }
+        public AudioManager Audio { private set; get; }
 
         EntityManager entityManager;
 
@@ -201,6 +203,7 @@ namespace JRPG
             UpdateScaleViewport();
 
             entityManager = new EntityManager(this);
+            Audio = new AudioManager(this);
 
             KeyInput = new TextInput(this);
 

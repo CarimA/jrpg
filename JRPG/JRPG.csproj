@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="EntityComponent\Components\CollisionComponent.cs" />
     <Compile Include="GameComponents\AssetManager.cs" />
+    <Compile Include="GameComponents\AudioManager.cs" />
     <Compile Include="GameComponents\Camera.cs" />
     <Compile Include="Data\SaveData.cs" />
     <Compile Include="Data\DataTree.cs" />
@@ -81,6 +82,9 @@
     <Compile Include="Scripting\Commands\ShowTextCommand.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="irrKlang.NET4">
+      <HintPath>..\packages\irrKlang.NET4.dll</HintPath>
+    </Reference>
     <Reference Include="Jint, Version=0.0.0.0, Culture=neutral, PublicKeyToken=2e92ba9c8d81157f, processorArchitecture=MSIL">
       <HintPath>..\packages\Jint.2.11.58\lib\net451\Jint.dll</HintPath>
     </Reference>

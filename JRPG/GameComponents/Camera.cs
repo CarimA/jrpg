@@ -66,6 +66,8 @@ namespace JRPG
                 target = entity;
         }
 
+        public Vector2 GetTargetPosition() => target.GetComponent<PositionComponent>().Position;
+
         public override void Update(GameTime gameTime)
         { 
             if (target != null)

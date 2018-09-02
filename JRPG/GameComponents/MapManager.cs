@@ -117,13 +117,12 @@ namespace JRPG
 
         public void Set(string id)
         {
-            // todo: play music
-            // or send some event to do that idk
 
             // also todo: HANDLE EXCEPTIONS SERIOUSLY.
 
             CurrentMap = Maps.First((m) => m.ID == id);
-           // Game.SuppressDraw();
+            Game.Audio.PlayBGM(CurrentMap.GetProperty("music"));
+            // Game.SuppressDraw();
 
         }
 
