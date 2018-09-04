@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace JRPG.EntityComponent.Components
+namespace JRPG.GameComponents
 {
-    public class InputComponent : Component
+    public class InputManager : GameComponent
     {
         public List<Tuple<string, List<Buttons>, List<Keys>>> Actions = new List<Tuple<string, List<Buttons>, List<Keys>>>()
         {
@@ -27,13 +27,14 @@ namespace JRPG.EntityComponent.Components
 
         public Dictionary<string, bool> lastPressed;
         public Dictionary<string, bool> pressed;
-        private Queue<string> presses;
 
-        public InputComponent() : base()
+        public InputManager(Game game) : base(game)
         {
+            game.Components.Add(this);
+            UpdateOrder = int.MinValue;
+
             lastPressed = new Dictionary<string, bool>();
             pressed = new Dictionary<string, bool>();
-            presses = new Queue<string>();
 
             foreach (var a in Actions)
             {
@@ -51,45 +52,10 @@ namespace JRPG.EntityComponent.Components
             {
                 // set last presses
                 lastPressed[a.Item1] = pressed[a.Item1];
-
-                // todo: handle gamepad/keyboard priority
-                /*if (gamePad.IsConnected)
-                {
-                    if (a.Item2.HasValue)
-                    {
-                        pressed[a.Item1] = gamePad.IsButtonDown(a.Item2.Value);
-                        continue;
-                    }
-                }*/
-
-
                 pressed[a.Item1] = a.Item2.Where((b) => gamePad.IsButtonDown(b)).Count() > 0 || a.Item3.Where((k) => keyboard.IsKeyDown(k)).Count() > 0;
-                
 
-                if (pressed[a.Item1] && !lastPressed[a.Item1])
-                {
-                    presses.Enqueue(a.Item1);
-
-                    if (presses.Count > 20)
-                    {
-                        presses.Dequeue();
-                    }
-                }
+                // todo: handle gamepad/keyboard priority?
             }
-        }
-
-        public string PollPress()
-        {
-            if (presses.Count > 0)
-            {
-                return presses.Dequeue();
-            }
-            return "";
-        }
-
-        public void FlushPresses()
-        {
-            presses.Clear();
         }
 
         public bool ButtonPressed(string key) => pressed[key] && !lastPressed[key];

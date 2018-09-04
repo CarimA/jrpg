@@ -100,6 +100,7 @@ namespace JRPG.GameComponents
 
         private void Watcher_Changed(object sender, FileSystemEventArgs e)
         {
+            Console.WriteLine("Reloaded script: " + e.FullPath);
             LoadScript(e.FullPath);
         }
 

@@ -40,7 +40,10 @@ namespace JRPG.EntityComponent
         public bool HasComponent<T>() where T : Component => _componentTypes.Exists(c => c == typeof(T));
         public bool HasComponent(Type t) => _componentTypes.Exists(c => c == t);
         public T GetComponent<T>() where T : Component => _components.Find(c => c.GetType() == typeof(T)) as T;
-        
+        public Component GetComponent(Type t) => _components.Find(c => c.GetType() == t);
+
+        public List<Component> GetComponents() => _components;
+
         public void AddComponent(Component component)
         {
             _componentTypes.Add(component.GetType());

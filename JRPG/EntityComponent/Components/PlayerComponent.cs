@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.BitmapFonts;
 using static JRPG.EntityComponent.Components.PositionComponent;
 
@@ -11,18 +12,17 @@ namespace JRPG.EntityComponent.Components
 {
     public class PlayerComponent : DrawableComponent
     {
-        public float WalkSpeed = 75f;
-        public float RunSpeed = 170f;
+        public float WalkSpeed = 125f;
+        public float RunSpeed = 270f;
         public bool RunToggled = false;
         public bool InControl = true;
 
         public override void Update(GameTime gameTime)
         {
-            InputComponent input = this.GetComponent<InputComponent>();
             PositionComponent position = this.GetComponent<PositionComponent>();
 
             // set fullscreen
-            if (input.ButtonPressed("fullscreen"))
+            if (Game.Input.ButtonPressed("fullscreen"))
             {
                 Game.Graphics.IsFullScreen = !Game.Graphics.IsFullScreen;
                 Game.Graphics.PreferredBackBufferHeight = Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
@@ -30,28 +30,28 @@ namespace JRPG.EntityComponent.Components
                 Game.Graphics.ApplyChanges();
             }
 
-            if (input.ButtonPressed("debug"))
+            if (Game.Input.ButtonPressed("debug"))
             {
                 Game.Console.ToggleVisible();
             }
 
-            if (input.ButtonPressed("screenshot"))
+            if (Game.Input.ButtonPressed("screenshot"))
             {
                 Game.SaveScreenshot();
             }
 
-            if (input.ButtonPressed("up"))
+            if (Game.Input.ButtonPressed("up"))
             {
                 Game.Console.MoveCursorUp();
             }
-            if (input.ButtonPressed("down"))
+            if (Game.Input.ButtonPressed("down"))
             {
                 Game.Console.MoveCursorDown();
             }
 
             if (InControl)
             {
-                if (input.ButtonPressed("run"))
+                if (Game.Input.ButtonPressed("run"))
                 {
                     RunToggled = !RunToggled;
                 }
@@ -59,19 +59,19 @@ namespace JRPG.EntityComponent.Components
                 float runSpeed = RunToggled ? 65f : 120f;
                 Vector2 walkDir = Vector2.Zero;
                 
-                if (input.ButtonDown("up"))
+                if (Game.Input.ButtonDown("up"))
                 {
                     walkDir.Y--;
                 }
-                if (input.ButtonDown("down"))
+                if (Game.Input.ButtonDown("down"))
                 {
                     walkDir.Y++;
                 }
-                if (input.ButtonDown("left"))
+                if (Game.Input.ButtonDown("left"))
                 {
                     walkDir.X--;
                 }
-                if (input.ButtonDown("right"))
+                if (Game.Input.ButtonDown("right"))
                 {
                     walkDir.X++;
                 }
@@ -102,7 +102,7 @@ namespace JRPG.EntityComponent.Components
                 
                 if (position.MovementDirection == Direction.None)
                 {
-                    if (input.ButtonPressed("action"))
+                    if (Game.Input.ButtonPressed("action"))
                     {
                         throw new NotImplementedException();
                         /*Direction direction = position.FacingDirection;
@@ -134,13 +134,18 @@ namespace JRPG.EntityComponent.Components
         public override void DrawMask(GameTime gameTime)
         {
             PositionComponent position = this.GetComponent<PositionComponent>();
-            TextureComponent texture = GetComponent<TextureComponent>();
-            Game.SpriteBatch.Draw(texture.Texture, position.Position - new Vector2((MainGame.TILE_SIZE / 2) + 8, (MainGame.TILE_SIZE / 2) + 16 + 8 + 6), Color.White);
+            Game.SpriteBatch.Draw(Game.Assets.Get<Texture2D>(AssetManager.Asset.DebugPlayer), position.Position - new Vector2((MainGame.TILE_SIZE / 2) + 8, (MainGame.TILE_SIZE / 2) + 16 + 8 + 6), Color.White);
         }
 
         public override void DrawUI(GameTime gameTime)
         {
 
+        }
+
+
+        public override void Receive(MessageType message, Entity entity, Component sender)
+        {
+            throw new NotImplementedException();
         }
     }
 }

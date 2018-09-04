@@ -62,8 +62,8 @@ namespace JRPG.Scripting.Commands
 
         public override void Update(GameTime gameTime)
         {
-            InputComponent pin = Player.GetComponent<InputComponent>();
-            string pol = pin.PollPress();
+            //InputComponent pin = Player.GetComponent<InputComponent>();
+            string pol = "down"; // pin.PollPress();
 
             if (pol == "right")
             {

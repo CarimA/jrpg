@@ -109,8 +109,8 @@ namespace JRPG.Scripting.Commands
             if (fullText == null || fullText == "")
                 return;
 
-            InputComponent pin = Player.GetComponent<InputComponent>();
-            string pol = pin.PollPress();
+            //InputComponent pin = Player.GetComponent<InputComponent>();
+            string pol = "action"; // pin.PollPress();
 
             if (finished)
             {

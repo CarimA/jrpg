@@ -16,9 +16,7 @@ namespace JRPG.EntityComponent.Components
         public CollisionComponent(RectangleF localBounds) //, int bezel = 0)
         {
             LocalBounds = localBounds;
-
-            //if (bezel == 0)
-            //{
+            
             CollisionBox = new Polygon(new Vector2(0, 0), new List<Vector2>()
                 {
                     new Vector2(localBounds.Left, localBounds.Top),
@@ -26,24 +24,6 @@ namespace JRPG.EntityComponent.Components
                     new Vector2(localBounds.Right, localBounds.Bottom),
                     new Vector2(localBounds.Left, localBounds.Bottom)
                 });
-            /*}
-            else
-            {
-                CollisionBox = new Polygon(new Vector2(0, 0), new List<Vector2>()
-                {
-                    new Vector2(localBounds.Left + bezel, localBounds.Top),
-                    new Vector2(localBounds.Right - bezel, localBounds.Top),
-                    new Vector2(localBounds.Right, localBounds.Top + bezel),
-                    new Vector2(localBounds.Right, localBounds.Bottom - bezel),
-                    new Vector2(localBounds.Right - bezel, localBounds.Bottom),
-                    new Vector2(localBounds.Left + bezel, localBounds.Bottom),
-                    new Vector2(localBounds.Left, localBounds.Bottom - bezel),
-                    new Vector2(localBounds.Left, localBounds.Top + bezel)
-                });
-
-            }*/
-
-            //ShapePrimitives.Rectangle(localBounds.X, localBounds.Y, localBounds.Width, localBounds.Height);
         }
 
         public override void Update(GameTime gameTime)
@@ -64,6 +44,12 @@ namespace JRPG.EntityComponent.Components
             CollisionBox.Move(polys, position.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
             position.Position = CollisionBox.Position;
 
+        }
+
+
+        public override void Receive(MessageType message, Entity entity, Component sender)
+        {
+            throw new NotImplementedException();
         }
     }
 }

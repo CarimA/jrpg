@@ -26,7 +26,7 @@ namespace JRPG
 {
     public class MainGame : Game
     {
-        // todo: fix this ugly god object mess of a class
+        // todo: tidy up this ugly god object mess of a class
         public VisualConsole Console;
 
         public AssetManager Assets;
@@ -48,6 +48,7 @@ namespace JRPG
         public TransitionManager Transition { private set; get; }
         public TextInput KeyInput { private set; get; }
         public AudioManager Audio { private set; get; }
+        public InputManager Input { private set; get; }
 
         EntityManager entityManager;
 
@@ -204,19 +205,17 @@ namespace JRPG
 
             entityManager = new EntityManager(this);
             Audio = new AudioManager(this);
+            Input = new InputManager(this);
 
             KeyInput = new TextInput(this);
 
             Player = new Entity(entityManager, "player");
             Player.AddComponents(new List<Component>()
             {
-                new InputComponent(),
                 new PositionComponent(),
-                new TextureComponent("Debug/player"),
                 new PlayerComponent(),
                 new CollisionComponent(new Resolve.RectangleF(-6, -20, 12, 24))
             });
-            entityManager.AddEntity(Player);
 
             Camera = new Camera(this);
             Camera.SetTarget(Player);

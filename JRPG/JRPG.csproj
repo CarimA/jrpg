@@ -48,22 +48,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EntityComponent\Components\CollisionComponent.cs" />
+    <Compile Include="EntityComponent\MessageType.cs" />
     <Compile Include="GameComponents\AssetManager.cs" />
     <Compile Include="GameComponents\AudioManager.cs" />
     <Compile Include="GameComponents\Camera.cs" />
     <Compile Include="Data\SaveData.cs" />
     <Compile Include="Data\DataTree.cs" />
     <Compile Include="EntityComponent\Components\PlayerComponent.cs" />
-    <Compile Include="EntityComponent\Components\TextureComponent.cs" />
     <Compile Include="EntityComponent\DrawableComponent.cs" />
     <Compile Include="EntityComponent\Component.cs" />
-    <Compile Include="EntityComponent\Components\InputComponent.cs" />
     <Compile Include="EntityComponent\Components\PositionComponent.cs" />
     <Compile Include="EntityComponent\Entity.cs" />
     <Compile Include="EntityComponent\EntityList.cs" />
     <Compile Include="EntityComponent\EntityManager.cs" />
     <Compile Include="GameComponents\CoroutineManager.cs" />
     <Compile Include="GameComponents\IndexedQueue.cs" />
+    <Compile Include="GameComponents\InputManager.cs" />
     <Compile Include="GameComponents\ScriptCommands\Command.cs" />
     <Compile Include="GameComponents\ScriptCommands\WaitCommand.cs" />
     <Compile Include="GameComponents\ScriptingManager.cs" />

@@ -18,9 +18,10 @@ namespace JRPG.Scripting.Commands
             SetCommand();
             held = true;
 
-
-
-            while (held) ;
+            while (held)
+            {
+                System.Threading.Thread.Sleep(200);
+            }
 
             ClearCommand();
             return null;
