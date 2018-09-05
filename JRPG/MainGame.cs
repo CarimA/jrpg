@@ -168,6 +168,14 @@ namespace JRPG
             }
         }
 
+        public void ToggleFullscreen()
+        {
+            Graphics.IsFullScreen = !Graphics.IsFullScreen;
+            Graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+            Graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+            Graphics.ApplyChanges();
+        }
+
         private void UpdateScaleViewport()
         {
             float aspectRatio = (float)GAME_WIDTH / (float)GAME_HEIGHT;
@@ -212,6 +220,7 @@ namespace JRPG
             Player = new Entity(entityManager, "player");
             Player.AddComponents(new List<Component>()
             {
+                new InputTransformComponent(),
                 new PositionComponent(),
                 new PlayerComponent(),
                 new CollisionComponent(new Resolve.RectangleF(-6, -20, 12, 24))

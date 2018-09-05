@@ -12,95 +12,71 @@ namespace JRPG.EntityComponent.Components
 {
     public class PlayerComponent : DrawableComponent
     {
-        public float WalkSpeed = 125f;
-        public float RunSpeed = 270f;
+        public Vector2 MovementDirection;
+        public float CurrentSpeed() => RunToggled ? WalkSpeed : RunSpeed;
+        public float WalkSpeed = 70f;
+        public float RunSpeed = 140f;
         public bool RunToggled = false;
-        public bool InControl = true;
+        public bool InControl = false;
+        
+        public PlayerComponent()
+        {
+        }
+
+        public override void Initialize()
+        {
+            ToggleControl();
+
+            Subscribe("fullscreen-pressed", (Entity e, Component c) =>
+            {
+                Game.ToggleFullscreen();
+            });
+
+            Subscribe("debug-pressed", (Entity e, Component c) =>
+            {
+                Game.Console.ToggleVisible();
+            });
+
+            Subscribe("screenshot-pressed", (Entity e, Component c) =>
+            {
+                Game.SaveScreenshot();
+            });
+
+            Subscribe("pgup-pressed", (Entity e, Component c) =>
+            {
+                Game.Console.MoveCursorUp();
+            });
+
+            Subscribe("pgdown-pressed", (Entity e, Component c) =>
+            {
+                Game.Console.MoveCursorDown();
+            });
+
+            Subscribe("input-state", HandleInputState);
+            Subscribe("run-pressed", ToggleRun);
+        }
+
+        public void ToggleControl() => InControl = !InControl;
+        public void ToggleRun(Entity entity, Component component)
+        {
+            if (InControl)
+            { 
+                RunToggled = !RunToggled;
+            }
+        }
+
+        public void HandleInputState(Entity entity, Component component)
+        {
+            MovementDirection = (component as InputTransformComponent).LeftThumbstick;
+            Send("move");
+        }
+
 
         public override void Update(GameTime gameTime)
         {
-            PositionComponent position = this.GetComponent<PositionComponent>();
-
-            // set fullscreen
-            if (Game.Input.ButtonPressed("fullscreen"))
-            {
-                Game.Graphics.IsFullScreen = !Game.Graphics.IsFullScreen;
-                Game.Graphics.PreferredBackBufferHeight = Game.GraphicsDevice.Adapter.CurrentDisplayMode.Height;
-                Game.Graphics.PreferredBackBufferWidth = Game.GraphicsDevice.Adapter.CurrentDisplayMode.Width;
-                Game.Graphics.ApplyChanges();
-            }
-
-            if (Game.Input.ButtonPressed("debug"))
-            {
-                Game.Console.ToggleVisible();
-            }
-
-            if (Game.Input.ButtonPressed("screenshot"))
-            {
-                Game.SaveScreenshot();
-            }
-
-            if (Game.Input.ButtonPressed("up"))
-            {
-                Game.Console.MoveCursorUp();
-            }
-            if (Game.Input.ButtonPressed("down"))
-            {
-                Game.Console.MoveCursorDown();
-            }
-
             if (InControl)
             {
-                if (Game.Input.ButtonPressed("run"))
-                {
-                    RunToggled = !RunToggled;
-                }
-
-                float runSpeed = RunToggled ? 65f : 120f;
-                Vector2 walkDir = Vector2.Zero;
-                
-                if (Game.Input.ButtonDown("up"))
-                {
-                    walkDir.Y--;
-                }
-                if (Game.Input.ButtonDown("down"))
-                {
-                    walkDir.Y++;
-                }
-                if (Game.Input.ButtonDown("left"))
-                {
-                    walkDir.X--;
-                }
-                if (Game.Input.ButtonDown("right"))
-                {
-                    walkDir.X++;
-                }
-
-                if (walkDir != Vector2.Zero)
-                {
-                    walkDir.Normalize();
-                }
-
-                position.Move(walkDir, runSpeed);
-
-                /*if (walkDir.X < 0)
-                {
-                    position.Move(PositionComponent.Direction.Left, runSpeed);
-                }
-                else if (walkDir.X > 0)
-                {
-                    position.Move(PositionComponent.Direction.Right, runSpeed);
-                }
-                else if (walkDir.Y < 0)
-                {
-                    position.Move(PositionComponent.Direction.Up, runSpeed);
-                }
-                else if (walkDir.Y > 0)
-                {
-                    position.Move(PositionComponent.Direction.Down, runSpeed);
-                }*/
-                
-                if (position.MovementDirection == Direction.None)
+                //if (position.MovementDirection == Direction.None)
                 {
                     if (Game.Input.ButtonPressed("action"))
                     {
@@ -140,12 +116,6 @@ namespace JRPG.EntityComponent.Components
         public override void DrawUI(GameTime gameTime)
         {
 
-        }
-
-
-        public override void Receive(MessageType message, Entity entity, Component sender)
-        {
-            throw new NotImplementedException();
         }
     }
 }

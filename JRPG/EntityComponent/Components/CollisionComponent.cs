@@ -26,14 +26,20 @@ namespace JRPG.EntityComponent.Components
                 });
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Initialize()
         {
-            PositionComponent position = GetComponent<PositionComponent>();
+            Subscribe("move-collision", Move);
+        }
 
+        public void Move(Entity entity, Component component)
+        {
             if (Game.MapManager == null || Game.MapManager.CurrentMap == null)
             {
                 return;
             }
+
+            PositionComponent position = (component as PositionComponent);
+
 
             List<Polygon> polys = Game.MapManager.CurrentMap.World.Retrieve(new RectangleF(position.Position.X + LocalBounds.X,
                 position.Position.Y + LocalBounds.Y,
@@ -41,15 +47,17 @@ namespace JRPG.EntityComponent.Components
                 LocalBounds.Height));
 
             CollisionBox.Position = position.Position;
-            CollisionBox.Move(polys, position.Velocity * (float)gameTime.ElapsedGameTime.TotalSeconds);
-            position.Position = CollisionBox.Position;
-
+            CollisionBox.Move(polys, position.Velocity);
+            Send("set-position");
         }
 
-
-        public override void Receive(MessageType message, Entity entity, Component sender)
+        public override void Update(GameTime gameTime)
         {
-            throw new NotImplementedException();
+            PositionComponent position = GetComponent<PositionComponent>();
+
+
+            position.Position = CollisionBox.Position;
+
         }
     }
 }

@@ -21,30 +21,11 @@ namespace JRPG.EntityComponent
         public Component GetComponent(Type component) => GetOwner?.GetComponent(component);
         public bool HasComponent(Type component) => GetOwner.HasComponent(component);
 
+        public abstract void Initialize();
         public abstract void Update(GameTime gameTime);
-
-        public abstract void Receive(MessageType message, Entity entity, Component sender);
-
-        public void Send(MessageType message, params Component[] components)
-        {
-            foreach (var component in components)
-            {
-                if (HasComponent(component.GetType())) {
-                    GetComponent(component.GetType()).Receive(message, GetOwner, this);
-                }
-            }
-        }
-
-        public void SendAll(MessageType message)
-        {
-            foreach (var component in GetOwner.GetComponents())
-            {
-                if (component != this)
-                {
-                    component.Receive(message, GetOwner, this);
-                }
-            }
-        }
+        
+        public void Subscribe(string message, Action<Entity, Component> action) => GetOwner.Subscribe(message, action);
+        public void Send(string message) => GetOwner.Send(message, GetOwner, this);
 
         // todo: global send and global send all
     }

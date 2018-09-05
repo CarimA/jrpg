@@ -22,6 +22,8 @@ namespace JRPG.EntityComponent
         public bool Active;
         public int Priority;
 
+        private readonly Dictionary<string, List<Action<Entity, Component>>> _subscriptions;
+
         public Entity(EntityManager entityManager, string name, int priority = 0)
         {
             _entityManager = entityManager;
@@ -32,6 +34,7 @@ namespace JRPG.EntityComponent
             Name = name;
             Active = true;
             Priority = priority;
+            _subscriptions = new Dictionary<string, List<Action<Entity, Component>>>();
         }
 
         public EntityManager GetManager => _entityManager;
@@ -49,6 +52,7 @@ namespace JRPG.EntityComponent
             _componentTypes.Add(component.GetType());
             _components.Add(component);
             component.Assign(this);
+            component.Initialize();
         }
         public void AddComponents(List<Component> components) => components.ForEach(c => AddComponent(c));
 
@@ -60,6 +64,26 @@ namespace JRPG.EntityComponent
 
         public void AddTag(string tag) => Tags.Add(tag);
         public void RemoveTag(string tag) => Tags.Remove(tag);
+
+        public void Subscribe(string message, Action<Entity, Component> action)
+        {
+            if (!_subscriptions.ContainsKey(message))
+            {
+                _subscriptions.Add(message, new List<Action<Entity, Component>>());
+            }
+            _subscriptions[message].Add(action);
+        }
+
+        public void Send(string message, Entity entity, Component sender)
+        {
+            if (_subscriptions.ContainsKey(message))
+            {
+                _subscriptions[message].ForEach((a) =>
+                {
+                    a(entity, sender);
+                });
+            }
+        }
 
         public void Clear() => _components.ForEach((c) => RemoveComponent(c));
 

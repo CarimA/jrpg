@@ -48,6 +48,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="EntityComponent\Components\CollisionComponent.cs" />
+    <Compile Include="EntityComponent\Components\InputTransformComponent.cs" />
     <Compile Include="EntityComponent\MessageType.cs" />
     <Compile Include="GameComponents\AssetManager.cs" />
     <Compile Include="GameComponents\AudioManager.cs" />

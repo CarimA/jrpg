@@ -32,17 +32,41 @@ namespace JRPG.EntityComponent.Components
         public Direction FacingDirection { get; set; }
 
         public float MoveSpeed;
-        
 
-        public void Set(float x, float y)
+        public override void Initialize()
         {
-            Position = new Vector2(x, y);
+            Subscribe("move", Move);
+            Subscribe("set-position", SetPosition);
         }
 
-        public void Move(Vector2 direction, float moveSpeed = 60f)
+        public void Move(Entity entity, Component component)
         {
-            Velocity = direction * moveSpeed;
+            if (component is PlayerComponent)
+            {
+                PlayerComponent player = (component as PlayerComponent);
+                if (player.InControl)
+                {
+                    Vector2 direction = player.MovementDirection;
+                    float speed = player.CurrentSpeed();
 
+                    Velocity = (direction * speed);
+                }
+            }
+        }
+
+        public void SetPosition(Entity entity, Component component)
+        {
+            if (component is CollisionComponent)
+            {
+                CollisionComponent collision = (component as CollisionComponent);
+
+                //
+                Position = collision.CollisionBox.Position;
+            }
+        }
+
+        public void CheckPosition()
+        {
             if (Game.MapManager.Player == GetOwner && Velocity != Vector2.Zero)
             {
                 if (Position.Y < 0)
@@ -64,15 +88,17 @@ namespace JRPG.EntityComponent.Components
                 Game.Window.Title = $"{Game.MapManager.CurrentMap.ID} - {{{Position}}}";
             }
         }
+
+        public void Set(float x, float y)
+        {
+            Position = new Vector2(x, y);
+        }
         
         public override void Update(GameTime gameTime)
         {
-
-        }
-
-        public override void Receive(MessageType message, Entity entity, Component sender)
-        {
-            throw new NotImplementedException();
+            Velocity *= (float)gameTime.ElapsedGameTime.TotalSeconds;
+            CheckPosition();
+            Send("move-collision");
         }
     }
 }

@@ -23,6 +23,8 @@ namespace JRPG.GameComponents
             new Tuple<string, List<Buttons>, List<Keys>>("fullscreen", new List<Buttons>() { }, new List<Keys>() { Keys.F1 }),
             new Tuple<string, List<Buttons>, List<Keys>>("debug", new List<Buttons>() { }, new List<Keys>() { Keys.F12 }),
             new Tuple<string, List<Buttons>, List<Keys>>("screenshot", new List<Buttons>() { Buttons.Back }, new List<Keys>() { Keys.F2 }),
+            new Tuple<string, List<Buttons>, List<Keys>>("pgup", new List<Buttons>(){ }, new List<Keys>() { Keys.PageUp }),
+            new Tuple<string, List<Buttons>, List<Keys>>("pgdown", new List<Buttons>(){ }, new List<Keys>() { Keys.PageDown })
         };
 
         public Dictionary<string, bool> lastPressed;
