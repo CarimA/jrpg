@@ -1,4 +1,5 @@
-[![TODO board](https://imdone.io/api/1.0/projects/5b8147adc5b0232d32772a2b/badge)](https://imdone.io/app#/board/CarimA/jrpg)
+[# This project no longer lives in this repository! It lives here instead!](https://github.com/CarimA/ProjectPhoton)
+~~I accidentally broke the repo and was too lazy to properly fix it, but it's just as well, it gives me the chance to clean crap up~~
 
 # jrpg - PhotoVs
 
